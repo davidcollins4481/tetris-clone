@@ -3,7 +3,7 @@
 This project is for Data Structures 3460::316
 
 ## Reference:
-http://tetris.wikia.com/wiki/Tetris_Guideline
+[Tetris Guidelines](http://tetris.wikia.com/wiki/Tetris_Guideline)
 
 ### There are general requirements for a game to be called Tetris. Here is a prioritized listing
 of the items to implement:
@@ -26,7 +26,7 @@ of the items to implement:
 * rotation described here:
     * http://tetris.wikia.com/wiki/SRS
 
-* Generating pieces - rules outlined here: http://tetris.wikia.com/wiki/Random_Generator
+* Generating pieces - rules outlined [here](http://tetris.wikia.com/wiki/Random_Generator)
 
 ### Items that will probably not get implemented
 
