@@ -1,0 +1,17 @@
+SCREEN_SIZE = (600,800)
+FPS = 40
+
+SCREEN_BGCOLOR = (255,255,255)
+
+# playfield constants
+# NOTE: the top two rows should not be visible
+ROWS = 22
+COLUMNS = 10
+PLAYFIELD_BGCOLOR = (240, 248, 136)
+BORDER_WIDTH = 200
+GRID_LINE_COLOR = (0,0,0)
+
+# preview constants
+PREVIEWER_BGCOLOR = (0,0,0)
+PREVIEWER_WIDTH = 120
+PREVIEWER_HEIGHT = 120
