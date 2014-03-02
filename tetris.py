@@ -24,6 +24,8 @@ def main():
                 pygame.quit()
                 sys.exit()
 
+            playfield.update()
+
         FPSCLOCK.tick(FPS)
         pygame.display.update()
 
