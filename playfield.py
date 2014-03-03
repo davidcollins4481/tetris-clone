@@ -11,8 +11,8 @@ class Playfield:
         self.surface.fill(PLAYFIELD_BGCOLOR)
 
         # want a large right margin for the piece previewer
-        self.x = BORDER_WIDTH / 10
-        self.y = BORDER_WIDTH / 2
+        self.x = 0#BORDER_WIDTH / 10
+        self.y = 0#BORDER_WIDTH / 2
 
         self.generator = RandomTetrominoGenerator()
 
@@ -21,7 +21,7 @@ class Playfield:
 
     def draw(self):
         rowNumber = 0;
-        currentY = startY = (ROW_HEIGHT * 2)# * - 1
+        currentY = 0
         import pdb
         #pdb.set_trace()
         columnNumber = 0
@@ -35,9 +35,8 @@ class Playfield:
                 line_color = PLAYFIELD_BORDER_COLOR
 
             pygame.draw.line(self.surface, line_color, (0, currentY), (PLAYFIELD_WIDTH, currentY))
-            print "current Y: " + str(currentY)
             rowNumber = rowNumber + 1
-            currentY = currentY + ROW_HEIGHT
+            currentY = currentY + CELL_WIDTH
 
         # draw columns
         while columnNumber <= COLUMNS:
@@ -45,9 +44,9 @@ class Playfield:
             if columnNumber == 0 or columnNumber == COLUMNS:
                 line_color = PLAYFIELD_BORDER_COLOR
 
-            pygame.draw.line(self.surface, line_color, (currentX, startY), (currentX, PLAYFIELD_HEIGHT))
+            pygame.draw.line(self.surface, line_color, (currentX, 0), (currentX, PLAYFIELD_HEIGHT))
             columnNumber = columnNumber + 1
-            currentX = currentX + COLUMN_WIDTH
+            currentX = currentX + CELL_WIDTH
 
         self.screen.blit(self.surface, (self.x, self.y))
         self._drawPreviewer()
@@ -59,10 +58,10 @@ class Playfield:
 
     # kind of odd returning constants here..mehhh
     def rowHeight(self):
-        return ROW_HEIGHT;
+        return CELL_WIDTH;
 
     def columnWidth(self):
-        return COLUMN_WIDTH;
+        return CELL_WIDTH;
 
     # private methods 
     def _drawPreviewer(self):

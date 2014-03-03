@@ -13,16 +13,12 @@ COLUMNS = 10
 # maybe we'll have to time to make it so you can change the game
 # size
 
-# FIXME: this 'BORDER_WIDTH' is stupid :) needs
-# removed and substituted with something else when all
-# major layout sections are in place
-BORDER_WIDTH = SCREEN_SIZE[0] / 3
-PLAYFIELD_HEIGHT = SCREEN_SIZE[1] - BORDER_WIDTH
-PLAYFIELD_WIDTH = SCREEN_SIZE[0] - BORDER_WIDTH
-# '-2' is so the top 2 hidden rows are now accounted for when
-# considering height
-ROW_HEIGHT = PLAYFIELD_HEIGHT / (ROWS - 2)
-COLUMN_WIDTH = PLAYFIELD_WIDTH / COLUMNS
+# make 5% of the screen width
+CELL_WIDTH = SCREEN_SIZE[0] * .05
+
+# 1px extra for the edge borders
+PLAYFIELD_HEIGHT = (CELL_WIDTH * ROWS) + 1
+PLAYFIELD_WIDTH = (CELL_WIDTH * COLUMNS) + 1
 
 PLAYFIELD_BGCOLOR = (0,0,0)
 GRID_LINE_COLOR = (111,111,111)
