@@ -11,8 +11,8 @@ class Playfield:
         self.surface.fill(PLAYFIELD_BGCOLOR)
 
         # want a large right margin for the piece previewer
-        self.x = 0#BORDER_WIDTH / 10
-        self.y = 0#BORDER_WIDTH / 2
+        self.x = 0
+        self.y = 0
 
         self.generator = RandomTetrominoGenerator()
 
@@ -23,7 +23,6 @@ class Playfield:
         rowNumber = 0;
         currentY = 0
         import pdb
-        #pdb.set_trace()
         columnNumber = 0
         currentX = 0
 
@@ -31,12 +30,11 @@ class Playfield:
         while rowNumber <= ROWS:
             line_color = GRID_LINE_COLOR
             if rowNumber == 0 or rowNumber == ROWS:
-#                pdb.set_trace()
                 line_color = PLAYFIELD_BORDER_COLOR
 
             pygame.draw.line(self.surface, line_color, (0, currentY), (PLAYFIELD_WIDTH, currentY))
             rowNumber = rowNumber + 1
-            currentY = currentY + CELL_WIDTH
+            currentY = currentY + CELL_HEIGHT
 
         # draw columns
         while columnNumber <= COLUMNS:
@@ -55,10 +53,16 @@ class Playfield:
         if not self.current_piece:
             self.current_piece = self.generator.next()
 
+        self.current_piece.render(self.surface)
+        self.screen.blit(self.surface, (self.x, self.y))
+
+    def rotateCurrent(self):
+        self.current_piece.rotate(self.surface)
+
 
     # kind of odd returning constants here..mehhh
     def rowHeight(self):
-        return CELL_WIDTH;
+        return CELL_HEIGHT;
 
     def columnWidth(self):
         return CELL_WIDTH;

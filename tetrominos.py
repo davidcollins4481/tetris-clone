@@ -1,4 +1,5 @@
-
+from constants import *
+import pygame
 # this has to return the next piece to give to the user.
 # the rules are here:
 # http://tetris.wikia.com/wiki/Random_Generator
@@ -40,6 +41,8 @@ class TetrominoFactory:
         # only one type so far
         if type == 1:
             return Straight()
+        elif type == 2:
+            return Square()
 
 """
 See for details:
@@ -50,7 +53,7 @@ class Tetromino(object):
     def __init__(self):
         return
 
-    def render(self, screen):
+    def render(self, surface):
         """ 
         override in specific classes. Each piece type
         has custom attributes - where it starts, how
@@ -62,5 +65,21 @@ class Straight(Tetromino):
     def __init__(self):
         super(Straight, self).__init__()
 
-    def render(self, screen):
-        return
+    def render(self, surface):
+        # Rect(left, top, width, height)
+        pygame.draw.rect(surface, CYAN, [0, 0, CELL_WIDTH * 4, CELL_HEIGHT])
+
+    def rotate(self, surface):
+        # FIXME: need to make sure "old" version is not rendered
+        pygame.draw.rect(surface, CYAN, [0, 0, CELL_WIDTH, CELL_HEIGHT * 4])
+
+
+class Square(Tetromino):
+    def __init__(self):
+        super(Square, self).__init__()
+
+    def render(self, surface):
+        # Rect(left, top, width, height)
+        pygame.draw.rect(surface, YELLOW, [0, 0, CELL_WIDTH * 2, CELL_HEIGHT * 2])
+
+

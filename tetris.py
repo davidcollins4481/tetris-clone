@@ -24,6 +24,13 @@ def main():
                 pygame.quit()
                 sys.exit()
 
+            if event.type == pygame.KEYDOWN:
+                if event.key == K_SPACE:
+                    print "Rotate block"
+                    playfield.rotateCurrent()
+
+
+            # do this last
             playfield.update()
 
         FPSCLOCK.tick(FPS)
