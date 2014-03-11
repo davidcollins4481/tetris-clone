@@ -1,5 +1,6 @@
 from constants import *
 import pygame
+import random # used to shuffle list of seven tetris blocks in tetromino
 # this has to return the next piece to give to the user.
 # the rules are here:
 # http://tetris.wikia.com/wiki/Random_Generator
@@ -19,7 +20,7 @@ class RandomTetrominoGenerator:
         return next
 
     def _generateSequence(self):
-        self.sequence = [ TetrominoFactory.createTetromino(1) ]
+        self.sequence = [ TetrominoFactory.createTetromino() ] #Removed 1 argument because new method does not take any
 
 class TetrominoFactory:
     """
@@ -35,7 +36,7 @@ class TetrominoFactory:
         7. = L = right gun piece (color: orange)
 
        we can always map these to constant vars if needed. Ex: STRAIGHT = 1
-    """
+   
     @staticmethod
     def createTetromino(type):
         # only one type so far
@@ -44,6 +45,17 @@ class TetrominoFactory:
         elif type == 2:
             return Square()
 
+    Commented out this method because it returns a single block for tetromino.
+    Algorithm is to return seven blocks, one of each, in random order.
+    A very simplistic description of the algorithm linked to at the top
+    of this page can be found here: http://www.tetrisconcept.net/forum/showthread.html?t=349
+    First attempt is below.
+   """
+    @staticmethod
+    def createTetromino():
+        list = [1,2,3,4,5,6,7]
+        random.shuffle(list)
+        return list
 """
 See for details:
 http://tetris.wikia.com/wiki/Tetromino
