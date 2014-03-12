@@ -20,8 +20,7 @@ class RandomTetrominoGenerator:
         return next
 
     def _generateSequence(self):
-        self.sequence = [ TetrominoFactory.createTetromino() ] #Removed 1 argument because new method does not take any
-
+        self.sequence = [ TetrominoFactory.createTetromino(1) ]
 class TetrominoFactory:
     """
     A factory used to control how tetrominos are made. For
@@ -36,26 +35,21 @@ class TetrominoFactory:
         7. = L = right gun piece (color: orange)
 
        we can always map these to constant vars if needed. Ex: STRAIGHT = 1
-   
+    """
     @staticmethod
     def createTetromino(type):
         # only one type so far
+	# full algorithm returns 7 blocks, one of each, in random order.
+        # general idea for full 7-block algorithm is:
+        # list = [1,2,3,4,5,6,7]
+        # random.shuffle(list)
+        # return list
         if type == 1:
             return Straight()
         elif type == 2:
             return Square()
 
-    Commented out this method because it returns a single block for tetromino.
-    Algorithm is to return seven blocks, one of each, in random order.
-    A very simplistic description of the algorithm linked to at the top
-    of this page can be found here: http://www.tetrisconcept.net/forum/showthread.html?t=349
-    First attempt is below.
-   """
-    @staticmethod
-    def createTetromino():
-        list = [1,2,3,4,5,6,7]
-        random.shuffle(list)
-        return list
+   
 """
 See for details:
 http://tetris.wikia.com/wiki/Tetromino
