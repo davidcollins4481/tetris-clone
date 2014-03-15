@@ -74,8 +74,18 @@ class Tetromino(object):
         """
         raise("Cannot use base implementation")
 
-    def next_position():
-        number_o
+    def next_position(self):
+        number_positions = len(self.positions)
+        next = 0
+        # we're on the last position
+        if self.current_position == number_positions - 1:
+            next = 0
+        else:
+            next = self.current_position + 1
+
+        # leave it up to the caller to save this
+        # info
+        return next
 
 class Straight(Tetromino):
     def __init__(self):
@@ -89,14 +99,14 @@ class Straight(Tetromino):
 
     def render(self, surface):
         # Rect(left, top, width, height)
-        pygame.draw.rect(surface, CYAN, [0, 0, CELL_WIDTH * 4, CELL_HEIGHT])
+        if self.current_position == 0:
+            pygame.draw.rect(surface, CYAN, [self.left, self.top, CELL_WIDTH * 4, CELL_HEIGHT])
+        else:
+            pygame.draw.rect(surface, CYAN, [self.left, self.top, CELL_WIDTH, CELL_HEIGHT * 4])
+
 
     def rotate(self, surface):
-        # FIXME: need to make sure "old" version is not rendered
-        #self.
-        #pygame.draw.rect(surface, CYAN, [0, 0, CELL_WIDTH, CELL_HEIGHT * 4])
-        self.render(surface)
-
+        self.current_position = self.next_position()
 
 class Square(Tetromino):
     def __init__(self):
@@ -105,5 +115,4 @@ class Square(Tetromino):
     def render(self, surface):
         # Rect(left, top, width, height)
         pygame.draw.rect(surface, YELLOW, [0, 0, CELL_WIDTH * 2, CELL_HEIGHT * 2])
-
 

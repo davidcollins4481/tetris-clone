@@ -50,9 +50,18 @@ class Playfield:
         self._draw_previewer()
 
     def update(self):
-        #self.screen.fill( (0,0,0) )
+        # paint over the surface with the background
+        # color to wipe out previous render
+        # This means that every piece will have to be
+        # renderend every single time. This seemed to 
+        # be the way to do it from what I've gathered - Dave
+        self.surface.fill(SCREEN_BGCOLOR)
 
-        #self.screen.blit(self.surface, (self.x, self.y))
+        # re-draw board
+        self.draw()
+
+        # redraw pieces
+        self.screen.blit(self.surface, (self.x, self.y))
         if not self.current_piece:
             self.current_piece = self.generator.next()
 
@@ -61,7 +70,6 @@ class Playfield:
 
     def rotate_current(self):
         self.current_piece.rotate(self.surface)
-
 
     # kind of odd returning constants here..mehhh
     def row_height(self):
@@ -74,5 +82,4 @@ class Playfield:
     def _draw_previewer(self):
         self.previewer = PiecePreviewer(self.screen)
         self.previewer.draw()
-
 
