@@ -9,18 +9,18 @@ import random # used to shuffle list of seven tetris blocks in tetromino
 class RandomTetrominoGenerator:
     def __init__(self):
         self.sequence = []
-        self._generateSequence()
+        self._generate_sequence()
 
     def next(self):
         # get the first
         next = self.sequence.pop(0)
         if not len(self.sequence):
-            self._generateSequence()
+            self._generate_sequence()
 
         return next
 
-    def _generateSequence(self):
-        self.sequence = [ TetrominoFactory.createTetromino(1) ]
+    def _generate_sequence(self):
+        self.sequence = [ TetrominoFactory.create_tetromino(1) ]
 class TetrominoFactory:
     """
     A factory used to control how tetrominos are made. For
@@ -37,7 +37,7 @@ class TetrominoFactory:
        we can always map these to constant vars if needed. Ex: STRAIGHT = 1
     """
     @staticmethod
-    def createTetromino(type):
+    def create_tetromino(type):
         # only one type so far
 	# full algorithm returns 7 blocks, one of each, in random order.
         # general idea for full 7-block algorithm is:
@@ -57,7 +57,14 @@ http://tetris.wikia.com/wiki/Tetromino
 
 class Tetromino(object):
     def __init__(self):
-        return
+        # these should be specified in the 
+        # child classes
+        self.top = 0
+        self.left = 0
+        self.width = 0
+        self.height = 0
+        self.positions = []
+        self.current_position = 0
 
     def render(self, surface):
         """ 
@@ -67,9 +74,18 @@ class Tetromino(object):
         """
         raise("Cannot use base implementation")
 
+    def next_position():
+        number_o
+
 class Straight(Tetromino):
     def __init__(self):
         super(Straight, self).__init__()
+        # initial position is vertical
+        self.width = CELL_WIDTH
+        self.height = CELL_HEIGHT * 4
+        # 0 = vertical, 1 = horizontal
+        self.positions = [0,1]
+        self.current_position = 0
 
     def render(self, surface):
         # Rect(left, top, width, height)
@@ -77,7 +93,9 @@ class Straight(Tetromino):
 
     def rotate(self, surface):
         # FIXME: need to make sure "old" version is not rendered
-        pygame.draw.rect(surface, CYAN, [0, 0, CELL_WIDTH, CELL_HEIGHT * 4])
+        #self.
+        #pygame.draw.rect(surface, CYAN, [0, 0, CELL_WIDTH, CELL_HEIGHT * 4])
+        self.render(surface)
 
 
 class Square(Tetromino):

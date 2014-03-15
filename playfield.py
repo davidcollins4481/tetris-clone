@@ -20,55 +20,58 @@ class Playfield:
         self.current_piece = self.generator.next()
 
     def draw(self):
-        rowNumber = 0;
-        currentY = 0
+        row_number = 0;
+        current_y = 0
         import pdb
-        columnNumber = 0
-        currentX = 0
+        column_number = 0
+        current_x = 0
 
         # draw rows
-        while rowNumber <= ROWS:
+        while row_number <= ROWS:
             line_color = GRID_LINE_COLOR
-            if rowNumber == 0 or rowNumber == ROWS:
+            if row_number == 0 or row_number == ROWS:
                 line_color = PLAYFIELD_BORDER_COLOR
 
-            pygame.draw.line(self.surface, line_color, (0, currentY), (PLAYFIELD_WIDTH, currentY))
-            rowNumber = rowNumber + 1
-            currentY = currentY + CELL_HEIGHT
+            pygame.draw.line(self.surface, line_color, (0, current_y), (PLAYFIELD_WIDTH, current_y))
+            row_number = row_number + 1
+            current_y = current_y + CELL_HEIGHT
 
         # draw columns
-        while columnNumber <= COLUMNS:
+        while column_number <= COLUMNS:
             line_color = GRID_LINE_COLOR
-            if columnNumber == 0 or columnNumber == COLUMNS:
+            if column_number == 0 or column_number == COLUMNS:
                 line_color = PLAYFIELD_BORDER_COLOR
 
-            pygame.draw.line(self.surface, line_color, (currentX, 0), (currentX, PLAYFIELD_HEIGHT))
-            columnNumber = columnNumber + 1
-            currentX = currentX + CELL_WIDTH
+            pygame.draw.line(self.surface, line_color, (current_x, 0), (current_x, PLAYFIELD_HEIGHT))
+            column_number = column_number + 1
+            current_x = current_x + CELL_WIDTH
 
         self.screen.blit(self.surface, (self.x, self.y))
-        self._drawPreviewer()
+        self._draw_previewer()
 
     def update(self):
+        #self.screen.fill( (0,0,0) )
+
+        #self.screen.blit(self.surface, (self.x, self.y))
         if not self.current_piece:
             self.current_piece = self.generator.next()
 
         self.current_piece.render(self.surface)
         self.screen.blit(self.surface, (self.x, self.y))
 
-    def rotateCurrent(self):
+    def rotate_current(self):
         self.current_piece.rotate(self.surface)
 
 
     # kind of odd returning constants here..mehhh
-    def rowHeight(self):
+    def row_height(self):
         return CELL_HEIGHT;
 
-    def columnWidth(self):
+    def column_width(self):
         return CELL_WIDTH;
 
     # private methods 
-    def _drawPreviewer(self):
+    def _draw_previewer(self):
         self.previewer = PiecePreviewer(self.screen)
         self.previewer.draw()
 

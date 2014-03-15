@@ -19,6 +19,8 @@ def main():
 
     # this is the main game loop...this may get moved
     while True:
+        FPSCLOCK.tick(FPS)
+
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
@@ -27,13 +29,11 @@ def main():
             if event.type == pygame.KEYDOWN:
                 if event.key == K_SPACE:
                     print "Rotate block"
-                    playfield.rotateCurrent()
-
+                    playfield.rotate_current()
 
             # do this last
             playfield.update()
 
-        FPSCLOCK.tick(FPS)
         pygame.display.update()
 
 if __name__ == "__main__":
