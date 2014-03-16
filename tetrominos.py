@@ -20,7 +20,7 @@ class RandomTetrominoGenerator:
         return next
 
     def _generate_sequence(self):
-        self.sequence = [ TetrominoFactory.create_tetromino(1) ]
+        self.sequence = [ TetrominoFactory.create_tetromino(3) ]
 
 class TetrominoFactory:
     """
@@ -49,7 +49,8 @@ class TetrominoFactory:
             return Straight()
         elif type == 2:
             return Square()
-
+        elif type == 3:
+            return TShape()
    
 """
 See for details:
@@ -98,15 +99,7 @@ class Tetromino(object):
 class Straight(Tetromino):
     def __init__(self):
         super(Straight, self).__init__()
-        # initial position is horizontal
-        self.width = CELL_WIDTH * 4
-        self.height = CELL_HEIGHT
-        # 0 = vertical, 1 = horizontal
         self.positions = [0,1,2,3]
-        # these first two numbers may have to be offsets
-        # to the given current left/top of the piece
-        # ex: self.top + 0
-
 
         # ok so all of the pieces are inside of a bounding box..
         # straights is a 4x4 box and the piece rotates within it.
@@ -133,12 +126,56 @@ class Straight(Tetromino):
             position['height'] 
         ])
 
-
 class Square(Tetromino):
     def __init__(self):
         super(Square, self).__init__()
 
+    # the square doesn't have multiple positions...I don't yet see a reason
+    # to go beyond this
     def render(self, surface):
         # Rect(left, top, width, height)
-        pygame.draw.rect(surface, YELLOW, [0, 0, CELL_WIDTH * 2, CELL_HEIGHT * 2])
+         pygame.draw.rect(surface, YELLOW, [self.top, self.left, CELL_WIDTH * 2, CELL_HEIGHT * 2])
+
+# lamest class name ever
+class TShape(Tetromino):
+    def __init__(self):
+        super(TShape, self).__init__()
+        # initial position is horizontal
+
+        self.positions = [0,1,2,3]
+
+        # t-shape is 3x3
+        # drawing multiple shapes for each position
+        self.position_properties = [
+            [
+                { 'left': 0, 'top': 1, 'width': CELL_WIDTH * 3, 'height': CELL_HEIGHT     },
+                { 'left': 1 ,'top': 0, 'width': CELL_WIDTH,     'height': CELL_HEIGHT     }
+            ],
+            [
+                { 'left': 1, 'top': 0, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 3 },
+                { 'left': 2, 'top': 1, 'width': CELL_WIDTH,     'height': CELL_HEIGHT     }
+            ],
+            [
+                { 'left': 0, 'top': 1, 'width': CELL_WIDTH * 3, 'height': CELL_HEIGHT     },
+                { 'left': 1, 'top': 2, 'width': CELL_WIDTH,     'height': CELL_HEIGHT     }
+            ],
+            [
+                { 'left': 1, 'top': 0, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 3 },
+                { 'left': 0, 'top': 1, 'width': CELL_WIDTH,     'height': CELL_HEIGHT     }
+            ]
+        ]
+
+        self.current_position = 0
+
+    def render(self, surface):
+        # Rect(left, top, width, height)
+        positions = self.position_properties[self.current_position]
+
+        for piece_position in positions:
+            pygame.draw.rect(surface, PURPLE, [
+                self.left + (piece_position['left'] * CELL_WIDTH),
+                self.top + (piece_position['top'] * CELL_HEIGHT),
+                piece_position['width'],
+                piece_position['height']
+            ])
 
