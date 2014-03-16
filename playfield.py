@@ -22,7 +22,6 @@ class Playfield:
     def draw(self):
         row_number = 0;
         current_y = 0
-        import pdb
         column_number = 0
         current_x = 0
 
@@ -71,12 +70,15 @@ class Playfield:
     def rotate_current(self):
         self.current_piece.rotate(self.surface)
 
-    # kind of odd returning constants here..mehhh
-    def row_height(self):
-        return CELL_HEIGHT;
+    # processing key events
+    def move_current_left(self):
+        self.current_piece.move_left()
 
-    def column_width(self):
-        return CELL_WIDTH;
+    def move_current_right(self):
+        self.current_piece.move_right()
+
+    def move_current_down(self):
+        self.current_piece.move_down()
 
     # private methods 
     def _draw_previewer(self):

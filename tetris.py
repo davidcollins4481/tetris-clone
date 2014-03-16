@@ -26,9 +26,19 @@ def main():
                 pygame.quit()
                 sys.exit()
 
+            # it seems better to process key events here
+            # rather than in the playfield class...if we moved
+            # them from here, may be best to create a separate
+            # class to manage the movements
             if event.type == pygame.KEYDOWN:
                 if event.key == K_SPACE:
                     playfield.rotate_current()
+                elif event.key == K_LEFT:
+                    playfield.move_current_left()
+                elif event.key == K_RIGHT:
+                    playfield.move_current_right()
+                elif event.key == K_DOWN:
+                    playfield.move_current_down()
 
             # do this last
             playfield.update()

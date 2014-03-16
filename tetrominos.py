@@ -98,6 +98,15 @@ class Tetromino(object):
     def rotate(self, surface):
         self.current_position = self.next_position()
 
+    def move_left(self):
+        self.left -= CELL_WIDTH
+
+    def move_right(self):
+        self.left += CELL_WIDTH
+
+    def move_down(self):
+        self.top += CELL_HEIGHT
+
 class Straight(Tetromino):
     def __init__(self):
         super(Straight, self).__init__()
