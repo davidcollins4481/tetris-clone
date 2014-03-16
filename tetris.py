@@ -28,7 +28,6 @@ def main():
 
             if event.type == pygame.KEYDOWN:
                 if event.key == K_SPACE:
-                    print "Rotate block"
                     playfield.rotate_current()
 
             # do this last

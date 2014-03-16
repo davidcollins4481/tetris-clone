@@ -21,6 +21,7 @@ class RandomTetrominoGenerator:
 
     def _generate_sequence(self):
         self.sequence = [ TetrominoFactory.create_tetromino(1) ]
+
 class TetrominoFactory:
     """
     A factory used to control how tetrominos are made. For
@@ -53,6 +54,9 @@ class TetrominoFactory:
 """
 See for details:
 http://tetris.wikia.com/wiki/Tetromino
+
+Here is our rotation system:
+http://tetris.wikia.com/wiki/SRS
 """
 
 class Tetromino(object):
@@ -90,23 +94,37 @@ class Tetromino(object):
 class Straight(Tetromino):
     def __init__(self):
         super(Straight, self).__init__()
-        # initial position is vertical
-        self.width = CELL_WIDTH
-        self.height = CELL_HEIGHT * 4
+        # initial position is horizontal
+        self.width = CELL_WIDTH * 4
+        self.height = CELL_HEIGHT
         # 0 = vertical, 1 = horizontal
-        self.positions = [0,1]
+        self.positions = [0,1,2,3]
+        # these first two numbers may have to be offsets
+        # to the given current left/top of the piece
+        # ex: self.top + 0
+        self.position_properties = [
+            { 'left': 0, 'top': 0, 'width': CELL_WIDTH * 4, 'height': CELL_HEIGHT     },
+            { 'left': 0, 'top': 0, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 4 },
+            { 'left': 0, 'top': 0, 'width': CELL_WIDTH * 4, 'height': CELL_HEIGHT     },
+            { 'left': 0, 'top': 0, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 4 }
+        ]
+
         self.current_position = 0
 
     def render(self, surface):
         # Rect(left, top, width, height)
-        if self.current_position == 0:
-            pygame.draw.rect(surface, CYAN, [self.left, self.top, CELL_WIDTH * 4, CELL_HEIGHT])
-        else:
-            pygame.draw.rect(surface, CYAN, [self.left, self.top, CELL_WIDTH, CELL_HEIGHT * 4])
+        position = self.position_properties[self.current_position]
 
+        pygame.draw.rect(surface, CYAN, [ 
+            position['left'],
+            position['top'], 
+            position['width'], 
+            position['height'] 
+        ])
 
     def rotate(self, surface):
         self.current_position = self.next_position()
+        print self.current_position
 
 class Square(Tetromino):
     def __init__(self):
