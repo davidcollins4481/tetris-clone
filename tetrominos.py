@@ -20,7 +20,7 @@ class RandomTetrominoGenerator:
         return next
 
     def _generate_sequence(self):
-        self.sequence = [ TetrominoFactory.create_tetromino(3) ]
+        self.sequence = [ TetrominoFactory.create_tetromino(1) ]
 
 class TetrominoFactory:
     """
@@ -99,22 +99,31 @@ class Tetromino(object):
         self.current_position = self.next_position()
 
     def move_left(self):
-        current_position_info = self.positions[self.current_position]
+        current_position_info = self.position_properties[self.current_position]
 
-        if self.left <= 0:
+        # need to detect left collisions
+        min_left = min([pos['left'] for pos in current_position_info])
+
+        if self.left + min_left <= 0:
             return
         else:
-            print "Before movement: " + str(self.left)
             self.left -= CELL_WIDTH
-            print "After movement: " + str(self.left)
 
     def move_right(self):
-        if self.left >= COLUMNS * CELL_WIDTH:
+        current_position_info = self.position_properties[self.current_position]
+
+        # need to detect left collisions
+        max_left = max([pos['left'] for pos in current_position_info])
+        width =  max([pos['width'] for pos in current_position_info])
+
+        print "(left) = ({0})".format(max_left)
+
+        edge = (COLUMNS * CELL_WIDTH) - width
+
+        if self.left >= edge:
             return
         else:
-            print "Before movement: " + str(self.left)
             self.left += CELL_WIDTH
-            print "After movement: " + str(self.left)
 
     def move_down(self):
         self.top += CELL_HEIGHT
@@ -139,15 +148,16 @@ class Straight(Tetromino):
 
     def render(self, surface):
         # Rect(left, top, width, height)
-        position = self.position_properties[self.current_position]
+        positions = self.position_properties[self.current_position]
 
         # NOTE: self.top and self.left will change with the user's/game's movements
-        pygame.draw.rect(surface, CYAN, [ 
-            self.left + (position['left'] * CELL_WIDTH),
-            self.top + (position['top'] * CELL_HEIGHT),
-            position['width'], 
-            position['height'] 
-        ])
+        for position in positions:
+            pygame.draw.rect(surface, CYAN, [
+                self.left + (position['left'] * CELL_WIDTH),
+                self.top + (position['top'] * CELL_HEIGHT),
+                position['width'],
+                position['height']
+            ])
 
 class Square(Tetromino):
     def __init__(self):
