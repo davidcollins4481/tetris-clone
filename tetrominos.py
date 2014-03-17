@@ -20,7 +20,7 @@ class RandomTetrominoGenerator:
         return next
 
     def _generate_sequence(self):
-        self.sequence = [ TetrominoFactory.create_tetromino(4) ]
+        self.sequence = [ TetrominoFactory.create_tetromino(3) ]
 
 class TetrominoFactory:
     """
@@ -53,7 +53,7 @@ class TetrominoFactory:
             return TShape()
         elif type == 4:
             return SShape()
-   
+
 """
 See for details:
 http://tetris.wikia.com/wiki/Tetromino
@@ -99,10 +99,22 @@ class Tetromino(object):
         self.current_position = self.next_position()
 
     def move_left(self):
-        self.left -= CELL_WIDTH
+        current_position_info = self.positions[self.current_position]
+
+        if self.left <= 0:
+            return
+        else:
+            print "Before movement: " + str(self.left)
+            self.left -= CELL_WIDTH
+            print "After movement: " + str(self.left)
 
     def move_right(self):
-        self.left += CELL_WIDTH
+        if self.left >= COLUMNS * CELL_WIDTH:
+            return
+        else:
+            print "Before movement: " + str(self.left)
+            self.left += CELL_WIDTH
+            print "After movement: " + str(self.left)
 
     def move_down(self):
         self.top += CELL_HEIGHT
@@ -117,10 +129,10 @@ class Straight(Tetromino):
         # there are four distinct positions for the straight piece
         # even though it seems as though there would only be two.
         self.position_properties = [
-            { 'left': 0, 'top': 1, 'width': CELL_WIDTH * 4, 'height': CELL_HEIGHT     },
-            { 'left': 2, 'top': 0, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 4 },
-            { 'left': 0, 'top': 2, 'width': CELL_WIDTH * 4, 'height': CELL_HEIGHT     },
-            { 'left': 1, 'top': 0, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 4 }
+            [{ 'left': 0, 'top': 1, 'width': CELL_WIDTH * 4, 'height': CELL_HEIGHT     }],
+            [{ 'left': 2, 'top': 0, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 4 }],
+            [{ 'left': 0, 'top': 2, 'width': CELL_WIDTH * 4, 'height': CELL_HEIGHT     }],
+            [{ 'left': 1, 'top': 0, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 4 }]
         ]
 
         self.current_position = 0
@@ -140,12 +152,22 @@ class Straight(Tetromino):
 class Square(Tetromino):
     def __init__(self):
         super(Square, self).__init__()
+        self.positions = [0]
+        self.position_properties = [
+            [{'left': 0, 'top': 0, 'width': CELL_WIDTH * 2 ,'height': CELL_HEIGHT * 2 }]
+        ]
 
-    # the square doesn't have multiple positions...I don't yet see a reason
-    # to go beyond this
     def render(self, surface):
         # Rect(left, top, width, height)
-         pygame.draw.rect(surface, YELLOW, [self.top, self.left, CELL_WIDTH * 2, CELL_HEIGHT * 2])
+        positions = self.position_properties[self.current_position]
+
+        for piece_position in positions:
+            pygame.draw.rect(surface, YELLOW, [
+                self.left + (piece_position['left'] * CELL_WIDTH),
+                self.top + (piece_position['top'] * CELL_HEIGHT),
+                piece_position['width'],
+                piece_position['height']
+            ])
 
 # lamest class name ever
 class TShape(Tetromino):
