@@ -20,7 +20,7 @@ class RandomTetrominoGenerator:
         return next
 
     def _generate_sequence(self):
-        self.sequence = [ TetrominoFactory.create_tetromino(1) ]
+        self.sequence = [ TetrominoFactory.create_tetromino(5) ]
 
 class TetrominoFactory:
     """
@@ -53,7 +53,8 @@ class TetrominoFactory:
             return TShape()
         elif type == 4:
             return SShape()
-
+	elif type == 5:
+            return ZShape()
 """
 See for details:
 http://tetris.wikia.com/wiki/Tetromino
@@ -264,3 +265,44 @@ class SShape(Tetromino):
                 piece_position['height']
             ])
 
+class ZShape(Tetromino):
+    def __init__(self):
+        super(ZShape, self).__init__()
+        # initial position is horizontal
+
+        self.positions = [0,1,2,3]
+
+        # z-shape bounding box is 4x4
+        # drawing multiple shapes for each position
+        self.position_properties = [
+            [
+                { 'left': 0, 'top': 0, 'width': CELL_WIDTH * 2, 'height': CELL_HEIGHT     },
+                { 'left': 1 ,'top': 1, 'width': CELL_WIDTH * 2, 'height': CELL_HEIGHT     }
+            ],
+            [
+                { 'left': 1, 'top': 0, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 2 },
+                { 'left': 2, 'top': 1, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 2 }
+            ],
+            [
+                { 'left': 1, 'top': 1, 'width': CELL_WIDTH * 2, 'height': CELL_HEIGHT     },
+                { 'left': 0 ,'top': 2, 'width': CELL_WIDTH * 2, 'height': CELL_HEIGHT     }
+            ],
+            [
+                { 'left': 0, 'top': 0, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 2 },
+                { 'left': 1, 'top': 1, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 2 }
+            ]
+        ]
+
+        self.current_position = 0
+
+    def render(self, surface):
+        # Rect(left, top, width, height)
+        positions = self.position_properties[self.current_position]
+
+        for piece_position in positions:
+            pygame.draw.rect(surface, GREEN, [
+                self.left + (piece_position['left'] * CELL_WIDTH),
+                self.top + (piece_position['top'] * CELL_HEIGHT),
+                piece_position['width'],
+                piece_position['height']
+            ])
