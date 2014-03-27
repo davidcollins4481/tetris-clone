@@ -300,7 +300,7 @@ class ZShape(Tetromino):
         positions = self.position_properties[self.current_position]
 
         for piece_position in positions:
-            pygame.draw.rect(surface, GREEN, [
+            pygame.draw.rect(surface, RED, [
                 self.left + (piece_position['left'] * CELL_WIDTH),
                 self.top + (piece_position['top'] * CELL_HEIGHT),
                 piece_position['width'],
