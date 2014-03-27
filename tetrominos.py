@@ -20,7 +20,7 @@ class RandomTetrominoGenerator:
         return next
 
     def _generate_sequence(self):
-        self.sequence = [ TetrominoFactory.create_tetromino(5) ]
+        self.sequence = [ TetrominoFactory.create_tetromino(6) ]
 
 class TetrominoFactory:
     """
@@ -55,6 +55,8 @@ class TetrominoFactory:
             return SShape()
 	elif type == 5:
             return ZShape()
+	elif type == 6:
+	    return LGun()
 """
 See for details:
 http://tetris.wikia.com/wiki/Tetromino
@@ -272,7 +274,7 @@ class ZShape(Tetromino):
 
         self.positions = [0,1,2,3]
 
-        # z-shape bounding box is 4x4
+        # z-shape bounding box is 3x3
         # drawing multiple shapes for each position
         self.position_properties = [
             [
@@ -301,6 +303,48 @@ class ZShape(Tetromino):
 
         for piece_position in positions:
             pygame.draw.rect(surface, RED, [
+                self.left + (piece_position['left'] * CELL_WIDTH),
+                self.top + (piece_position['top'] * CELL_HEIGHT),
+                piece_position['width'],
+                piece_position['height']
+            ])
+
+class LGun(Tetromino):
+    def __init__(self):
+        super(LGun, self).__init__()
+        # initial position is horizontal
+
+        self.positions = [0,1,2,3]
+
+        # left gun bounding box is 3x3
+        # drawing multiple shapes for each position
+        self.position_properties = [
+            [
+                { 'left': 0, 'top': 0, 'width': CELL_WIDTH, 'height': CELL_HEIGHT },
+                { 'left': 0 ,'top': 1, 'width': CELL_WIDTH * 3, 'height': CELL_HEIGHT     }
+            ],
+            [
+                { 'left': 1, 'top': 0, 'width': CELL_WIDTH * 2,     'height': CELL_HEIGHT },
+                { 'left': 1, 'top': 0, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 3 }
+            ],
+            [
+                { 'left': 0, 'top': 1, 'width': CELL_WIDTH * 3, 'height': CELL_HEIGHT     },
+                { 'left': 2 ,'top': 1, 'width': CELL_WIDTH, 'height': CELL_HEIGHT * 2 }
+            ],
+            [
+                { 'left': 1, 'top': 0, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 3 },
+                { 'left': 0, 'top': 2, 'width': CELL_WIDTH * 2,     'height': CELL_HEIGHT }
+            ]
+        ]
+
+        self.current_position = 0
+
+    def render(self, surface):
+        # Rect(left, top, width, height)
+        positions = self.position_properties[self.current_position]
+
+        for piece_position in positions:
+            pygame.draw.rect(surface, BLUE, [
                 self.left + (piece_position['left'] * CELL_WIDTH),
                 self.top + (piece_position['top'] * CELL_HEIGHT),
                 piece_position['width'],
