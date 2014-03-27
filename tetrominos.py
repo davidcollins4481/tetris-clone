@@ -281,7 +281,7 @@ class ZShape(Tetromino):
             ],
             [
                 { 'left': 1, 'top': 0, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 2 },
-                { 'left': 2, 'top': 1, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 2 }
+                { 'left': 0, 'top': 1, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 2 }
             ],
             [
                 { 'left': 1, 'top': 1, 'width': CELL_WIDTH * 2, 'height': CELL_HEIGHT     },
