@@ -20,7 +20,11 @@ class RandomTetrominoGenerator:
         return next
 
     def _generate_sequence(self):
-        self.sequence = [ TetrominoFactory.create_tetromino(7) ]
+	list = [1,2,3,4,5,6,7]
+	random.shuffle(list)
+	for x in list:
+		self.sequence = [TetrominoFactory.create_tetromino(x)]
+       #self.sequence = [ TetrominoFactory.create_tetromino(7) ]
 
 class TetrominoFactory:
     """
