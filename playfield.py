@@ -61,7 +61,7 @@ class Playfield:
 
         # redraw pieces
         self.screen.blit(self.surface, (self.x, self.y))
-        if not self.current_piece:
+        if self.current_piece.top > CELL_HEIGHT*(ROWS-3):
             self.current_piece = self.generator.next()
 
         self.current_piece.render(self.surface)
