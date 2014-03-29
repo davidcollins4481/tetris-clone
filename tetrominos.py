@@ -44,11 +44,6 @@ class TetrominoFactory:
     @staticmethod
     def create_tetromino(type):
         # only one type so far
-	# full algorithm returns 7 blocks, one of each, in random order.
-        # general idea for full 7-block algorithm is:
-        # list = [1,2,3,4,5,6,7]
-        # random.shuffle(list)
-        # return list
         if type == 1:
             return Straight()
         elif type == 2:
