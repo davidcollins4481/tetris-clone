@@ -23,7 +23,8 @@ class RandomTetrominoGenerator:
 	list = [1,2,3,4,5,6,7]
 	random.shuffle(list)
 	for x in list:
-		self.sequence = [TetrominoFactory.create_tetromino(x)]
+		self.sequence.append(TetrominoFactory.create_tetromino(x))
+	print self.sequence
        #self.sequence = [ TetrominoFactory.create_tetromino(7) ]
 
 class TetrominoFactory:
