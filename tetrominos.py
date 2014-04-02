@@ -86,6 +86,9 @@ class Tetromino(object):
         """
         raise("Cannot use base implementation")
 
+    def get_position_properties(self):
+        return self.position_properties[self.current_position]
+
     def next_position(self):
         number_positions = len(self.positions)
         next = 0

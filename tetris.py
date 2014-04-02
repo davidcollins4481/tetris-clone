@@ -34,11 +34,11 @@ def main():
                 if event.key == K_SPACE:
                     playfield.rotate_current()
                 elif event.key == K_LEFT:
-                    playfield.move_current_left()
+                    playfield.move_current(LEFT)
                 elif event.key == K_RIGHT:
-                    playfield.move_current_right()
+                    playfield.move_current(RIGHT)
                 elif event.key == K_DOWN:
-                    playfield.move_current_down()
+                    playfield.move_current(DOWN)
 
             # do this last
             playfield.update()

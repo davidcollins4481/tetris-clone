@@ -19,11 +19,29 @@ class Playfield:
         # current piece under user's control
         self.current_piece = self.generator.next()
 
+        # I would like to avoid the overhead of using an object to
+        # represent a square if possible. Going to try to use values
+        # 0 = empty square, 1 = not empty/not usable
+        # start all off as empty
+        # call like so: self.squares[row][column]
+
+        # NOTE: I'm thinking that once a piece is settled in a location,
+        # we can just set the color of the square to be that of the color 
+        # of the piece which filled it. Are there any reasons that this wouldn't
+        # work?
+        self.squares = [[0 for x in xrange(COLUMNS)] for x in xrange(ROWS)]
+
     def draw(self):
         row_number = 0;
         current_y = 0
         column_number = 0
         current_x = 0
+
+
+        # NOTE: these grid lines technically don't HAVE to be drawn.
+        # they're nice now as guides to see during development, but
+        # I'm guessing that they can be removed once we have pieces
+        # moving/settling correctly. Should help a bit performance-wise
 
         # draw rows
         while row_number <= ROWS:
@@ -56,10 +74,9 @@ class Playfield:
         # be the way to do it from what I've gathered - Dave
         self.surface.fill(SCREEN_BGCOLOR)
 
-        # re-draw board
+        # re-draw board with settled pieces
         self.draw()
 
-        # redraw pieces
         self.screen.blit(self.surface, (self.x, self.y))
         if self.current_piece.top > CELL_HEIGHT*(ROWS-3):
             self.current_piece = self.generator.next()
@@ -67,18 +84,21 @@ class Playfield:
         self.current_piece.render(self.surface)
         self.screen.blit(self.surface, (self.x, self.y))
 
+    def update_squares(self):
+        return
+
     def rotate_current(self):
         self.current_piece.rotate(self.surface)
 
     # processing key events
-    def move_current_left(self):
-        self.current_piece.move_left()
-
-    def move_current_right(self):
-        self.current_piece.move_right()
-
-    def move_current_down(self):
-        self.current_piece.move_down()
+    def move_current(self, direction):
+        # TODO: check if next movement is possible before performing it
+        if direction == LEFT:
+            self.current_piece.move_left()
+        elif direction == RIGHT:
+            self.current_piece.move_right()
+        elif direction == DOWN:
+            self.current_piece.move_down()
 
     # private methods 
     def _draw_previewer(self):

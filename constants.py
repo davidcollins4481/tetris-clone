@@ -8,6 +8,11 @@ SCREEN_BGCOLOR = (0,0,0)
 ROWS = 22
 COLUMNS = 10
 
+# DIRECTIONS
+LEFT = 1
+RIGHT = 2
+DOWN = 3
+
 # row height / column width
 # try to make everything relative to SCREEN_SIZE...who knows -
 # maybe we'll have to time to make it so you can change the game
