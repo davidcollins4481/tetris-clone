@@ -73,9 +73,9 @@ class TetrominoPositionLogger(object):
 
     def __get__(self, obj, type=None):
         def wrapper(*args):
-            print "Before: {0}".format(obj.position_string())
+            print "Before: [{1}] {0}".format(obj.position_string(), obj.__class__)
             self.func(obj, *args)
-            print "After:  {0}".format(obj.position_string())
+            print "After:  [{1}] {0}".format(obj.position_string(), obj.__class__)
 
         return wrapper
 
@@ -121,7 +121,6 @@ class Tetromino(object):
     def rotate(self, surface):
         self.current_position = self.next_position()
 
-    @TetrominoPositionLogger
     def move_left(self):
         current_position_info = self.position_properties[self.current_position]
 
@@ -133,7 +132,6 @@ class Tetromino(object):
         else:
             self.left -= CELL_WIDTH
 
-    @TetrominoPositionLogger
     def move_right(self):
         current_position_info = self.position_properties[self.current_position]
 
@@ -148,7 +146,6 @@ class Tetromino(object):
         else:
             self.left += CELL_WIDTH
 
-    @TetrominoPositionLogger
     def move_down(self):
         self.top += CELL_HEIGHT
 

@@ -19,7 +19,7 @@ DOWN = 3
 # size
 
 # make 5% of the screen width
-CELL_WIDTH = SCREEN_SIZE[0] * .05
+CELL_WIDTH = int(SCREEN_SIZE[0] * .05)
 # improves readability
 CELL_HEIGHT = CELL_WIDTH
 # 1px extra for the edge borders

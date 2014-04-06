@@ -39,6 +39,8 @@ def main():
                     playfield.move_current(RIGHT)
                 elif event.key == K_DOWN:
                     playfield.move_current(DOWN)
+                elif event.key == K_RETURN:
+                    playfield.at_bottom = True
 
             # do this last
             playfield.update()

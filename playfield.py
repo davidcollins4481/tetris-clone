@@ -14,6 +14,9 @@ class Playfield:
         self.x = 0
         self.y = 0
 
+        # temporary
+        self.at_bottom = False
+
         self.generator = RandomTetrominoGenerator()
 
         # current piece under user's control
@@ -78,18 +81,66 @@ class Playfield:
         self.draw()
 
         self.screen.blit(self.surface, (self.x, self.y))
-        if self.current_piece.top > CELL_HEIGHT*(ROWS-3):
-            self.current_piece = self.generator.next()
+        # would be great if the only thing this method did
+        # was render the board and current piece. No code 
+        # for the logic of when the next piece should be 
+        # retrieved
+#        if self.current_piece.top > CELL_HEIGHT*(ROWS-3):
+#            self.current_piece = self.generator.next()
 
         self.current_piece.render(self.surface)
         self.screen.blit(self.surface, (self.x, self.y))
 
-    def move_allowed(self):
-        return true
+    def move_allowed(self, direction):
+        # left = columns
+        # top = rows
+        # self.squares[row][column]
+        row_offset = 0
+        column_offset = 0
+
+        if direction == LEFT:
+            column_offset = -1
+        elif direction == RIGHT:
+            column_offset = 1
+        elif direction == DOWN:
+            row_offset = 1
+
+        origin_row = (self.current_piece.top / CELL_HEIGHT) + row_offset
+        origin_column = (self.current_piece.left / CELL_WIDTH) + column_offset
+        pieces = self.current_piece.get_position_properties()
+
+        # (left, top)
+        # a dictionary will allow us to uniquify points
+        # without extra computations since keys must be unique.
+        squares = {}
+
+        for piece in pieces:
+            start_left = origin_column + piece['left']
+            start_top = origin_row + piece['top']
+            piece_width = int(piece['width']) / CELL_WIDTH
+            piece_height = int(piece['height']) / CELL_HEIGHT
+
+            # initial
+            squares["{0},{1}".format(start_left, start_top)] = 1
+
+            for i in range(piece_width):
+                squares["{0},{1}".format(start_left + i, start_top)] = 1
+
+            for i in range(piece_height):
+                squares["{0},{1}".format(start_left, start_top + i)] = 1
+
+        print squares.keys()
+
+        return True
 
     def reached_bottom(self):
-        #self.current_piece
-        return false;
+        # this is just temporary to test movements
+        if self.at_bottom:
+            # reset
+            self.at_bottom = False
+            return True
+        else:
+            return False
 
     def rotate_current(self):
         self.current_piece.rotate(self.surface)
@@ -99,7 +150,7 @@ class Playfield:
         # self.squares
         return
 
-    def get_next_piece():
+    def get_next_piece(self):
         self.current_piece = self.generator.next()
 
     # processing key events
@@ -109,6 +160,9 @@ class Playfield:
         if self.reached_bottom():
             self.record_current_piece_location()
             self.get_next_piece()
+            return
+
+        if not self.move_allowed(direction):
             return
 
         # TODO: check if next movement is possible before performing it
