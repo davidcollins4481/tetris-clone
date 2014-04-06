@@ -24,7 +24,7 @@ class RandomTetrominoGenerator:
 	random.shuffle(list)
 	for x in list:
 		self.sequence.append(TetrominoFactory.create_tetromino(x))
-	print self.sequence
+
        #self.sequence = [ TetrominoFactory.create_tetromino(7) ]
 
 class TetrominoFactory:
@@ -67,6 +67,18 @@ Here is our rotation system:
 http://tetris.wikia.com/wiki/SRS
 """
 
+class TetrominoPositionLogger(object):
+    def __init__(self, func):
+        self.func = func
+
+    def __get__(self, obj, type=None):
+        def wrapper(*args):
+            print "Before: {0}".format(obj.position_string())
+            self.func(obj, *args)
+            print "After:  {0}".format(obj.position_string())
+
+        return wrapper
+
 class Tetromino(object):
     def __init__(self):
         # these should be specified in the 
@@ -85,6 +97,9 @@ class Tetromino(object):
         it turns, it's color, etc.
         """
         raise("Cannot use base implementation")
+
+    def position_string(self):
+        return "({0}, {1}) [position: {2}]".format(self.left, self.top, self.get_position_properties())
 
     def get_position_properties(self):
         return self.position_properties[self.current_position]
@@ -106,6 +121,7 @@ class Tetromino(object):
     def rotate(self, surface):
         self.current_position = self.next_position()
 
+    @TetrominoPositionLogger
     def move_left(self):
         current_position_info = self.position_properties[self.current_position]
 
@@ -117,14 +133,13 @@ class Tetromino(object):
         else:
             self.left -= CELL_WIDTH
 
+    @TetrominoPositionLogger
     def move_right(self):
         current_position_info = self.position_properties[self.current_position]
 
         # need to detect left collisions
         max_left = max([pos['left'] for pos in current_position_info])
         width =  max([pos['width'] for pos in current_position_info])
-
-        print "(left) = ({0})".format(max_left)
 
         edge = (COLUMNS * CELL_WIDTH) - width
 
@@ -133,6 +148,7 @@ class Tetromino(object):
         else:
             self.left += CELL_WIDTH
 
+    @TetrominoPositionLogger
     def move_down(self):
         self.top += CELL_HEIGHT
 
