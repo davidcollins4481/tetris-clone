@@ -154,6 +154,8 @@ class Straight(Tetromino):
 
         self.current_position = 0
 
+    # I'm hoping this method can be refactored into a single method
+    # and placed in the base class
     def render(self, surface):
         # Rect(left, top, width, height)
         positions = self.position_properties[self.current_position]

@@ -84,14 +84,33 @@ class Playfield:
         self.current_piece.render(self.surface)
         self.screen.blit(self.surface, (self.x, self.y))
 
-    def update_squares(self):
-        return
+    def move_allowed(self):
+        return true
+
+    def reached_bottom(self):
+        #self.current_piece
+        return false;
 
     def rotate_current(self):
         self.current_piece.rotate(self.surface)
 
+    def record_current_piece_location(self):
+        # TODO: store the location of the current piece in
+        # self.squares
+        return
+
+    def get_next_piece():
+        self.current_piece = self.generator.next()
+
     # processing key events
     def move_current(self, direction):
+        # check if we're at the bottom - if so, record the location of the piece
+        # and get next piece
+        if self.reached_bottom():
+            self.record_current_piece_location()
+            self.get_next_piece()
+            return
+
         # TODO: check if next movement is possible before performing it
         if direction == LEFT:
             self.current_piece.move_left()
