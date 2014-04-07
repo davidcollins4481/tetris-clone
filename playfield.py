@@ -129,9 +129,21 @@ class Playfield:
             for i in range(piece_height):
                 squares["{0},{1}".format(start_left, start_top + i)] = 1
 
-        print squares.keys()
+        points = [point.split(',') for point in squares]
+        print points
+
+        # are we touching a side wall?
+        if self.bound_by_wall(points):
+            return False
 
         return True
+
+    def bound_by_wall(self, points):
+        for point in points:
+            if int(point[0]) < 0 or int(point[0]) > COLUMNS - 1:
+                return True
+
+        return False
 
     def reached_bottom(self):
         # this is just temporary to test movements
