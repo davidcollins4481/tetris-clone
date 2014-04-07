@@ -15,6 +15,7 @@ class Playfield:
         self.y = 0
 
         self.generator = RandomTetrominoGenerator()
+        self.previewer = PiecePreviewer(self.screen)
 
         # current piece under user's control
         self.current_piece = self.generator.next()
@@ -85,11 +86,11 @@ class Playfield:
         self.screen.blit(self.surface, (self.x, self.y))
 
     def move_allowed(self):
-        return true
+        return True
 
     def reached_bottom(self):
         #self.current_piece
-        return false;
+        return False;
 
     def rotate_current(self):
         self.current_piece.rotate(self.surface)
@@ -121,6 +122,5 @@ class Playfield:
 
     # private methods 
     def _draw_previewer(self):
-        self.previewer = PiecePreviewer(self.screen)
         self.previewer.draw()
 
