@@ -35,17 +35,32 @@ class Playfield:
         self.squares = [[0 for x in xrange(ROWS)] for x in xrange(COLUMNS)]
 
     def draw(self):
+        self.draw_board_lines()
+
+        # draw blocks that are on board
+        for row in range(ROWS):
+            for column in range(COLUMNS):
+                if self.squares[column][row]:
+                    pygame.draw.rect(self.surface, self.squares[column][row]['color'], [
+                        CELL_WIDTH * column,
+                        CELL_HEIGHT * row,
+                        CELL_WIDTH,
+                        CELL_HEIGHT
+                    ])
+
+        self.screen.blit(self.surface, (self.x, self.y))
+        self._draw_previewer()
+
+    def draw_board_lines(self):
         row_number = 0;
         current_y = 0
         column_number = 0
         current_x = 0
 
-
         # NOTE: these grid lines technically don't HAVE to be drawn.
         # they're nice now as guides to see during development, but
         # I'm guessing that they can be removed once we have pieces
         # moving/settling correctly. Should help a bit performance-wise
-
         # draw rows
         while row_number <= ROWS:
             line_color = GRID_LINE_COLOR
@@ -65,9 +80,6 @@ class Playfield:
             pygame.draw.line(self.surface, line_color, (current_x, 0), (current_x, PLAYFIELD_HEIGHT))
             column_number = column_number + 1
             current_x = current_x + CELL_WIDTH
-
-        self.screen.blit(self.surface, (self.x, self.y))
-        self._draw_previewer()
 
     def update(self):
         # paint over the surface with the background
@@ -168,9 +180,7 @@ class Playfield:
         # squares are stored [left,top] (think x,y)...
         # 
         for square in current_squares:
-            self.squares[ square[0] ][ square[1] ] = self.current_tetromino.color
-
-        return
+            self.squares[ square[0] ][ square[1] ] = { 'color': self.current_tetromino.color }
 
     def get_next_tetromino(self):
         self.current_tetromino = self.generator.next()
