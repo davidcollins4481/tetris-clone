@@ -20,7 +20,7 @@ class Playfield:
         self.generator = RandomTetrominoGenerator()
 
         # current piece under user's control
-        self.current_piece = self.generator.next()
+        self.current_tetromino = self.generator.next()
 
         # I would like to avoid the overhead of using an object to
         # represent a square if possible. Going to try to use values
@@ -85,16 +85,17 @@ class Playfield:
         # was render the board and current piece. No code 
         # for the logic of when the next piece should be 
         # retrieved
-#        if self.current_piece.top > CELL_HEIGHT*(ROWS-3):
-#            self.current_piece = self.generator.next()
+#        if self.current_tetromino.top > CELL_HEIGHT*(ROWS-3):
+#            self.current_tetromino = self.generator.next()
 
-        self.current_piece.render(self.surface)
+        self.current_tetromino.render(self.surface)
         self.screen.blit(self.surface, (self.x, self.y))
 
-    def move_allowed(self, direction):
-        # left = columns
-        # top = rows
-        # self.squares[row][column]
+    # sending a direction to this (see constants LEFT, RIGHT, DOWN)
+    # will get the locations AFTER that movement has been made.
+    # Calling without a direction argument, will get the current
+    # location
+    def get_tetromino_locations(self, direction = 0):
         row_offset = 0
         column_offset = 0
 
@@ -105,9 +106,9 @@ class Playfield:
         elif direction == DOWN:
             row_offset = 1
 
-        origin_row = (self.current_piece.top / CELL_HEIGHT) + row_offset
-        origin_column = (self.current_piece.left / CELL_WIDTH) + column_offset
-        pieces = self.current_piece.get_position_properties()
+        origin_row = (self.current_tetromino.top / CELL_HEIGHT) + row_offset
+        origin_column = (self.current_tetromino.left / CELL_WIDTH) + column_offset
+        pieces = self.current_tetromino.get_position_properties()
 
         # (left, top)
         # a dictionary will allow us to uniquify points
@@ -129,13 +130,17 @@ class Playfield:
             for i in range(piece_height):
                 squares["{0},{1}".format(start_left, start_top + i)] = 1
 
-        points = [point.split(',') for point in squares]
-        print points
+        return [point.split(',') for point in squares]
+       
+
+    def move_allowed(self, direction):
+        points = self.get_tetromino_locations(direction)
 
         # are we touching a side wall?
         if self.bound_by_wall(points):
             return False
 
+        print points
         return True
 
     def bound_by_wall(self, points):
@@ -155,35 +160,36 @@ class Playfield:
             return False
 
     def rotate_current(self):
-        self.current_piece.rotate(self.surface)
+        self.current_tetromino.rotate(self.surface)
 
-    def record_current_piece_location(self):
+    def store_tetromino(self):
         # TODO: store the location of the current piece in
         # self.squares
         return
 
-    def get_next_piece(self):
-        self.current_piece = self.generator.next()
+    def get_next_tetromino(self):
+        self.current_tetromino = self.generator.next()
 
     # processing key events
     def move_current(self, direction):
-        # check if we're at the bottom - if so, record the location of the piece
         # and get next piece
         if self.reached_bottom():
-            self.record_current_piece_location()
-            self.get_next_piece()
+            self.store_tetromino()
+            self.get_next_tetromino()
             return
 
         if not self.move_allowed(direction):
             return
 
-        # TODO: check if next movement is possible before performing it
         if direction == LEFT:
-            self.current_piece.move_left()
+            self.current_tetromino.move_left()
         elif direction == RIGHT:
-            self.current_piece.move_right()
+            self.current_tetromino.move_right()
         elif direction == DOWN:
-            self.current_piece.move_down()
+            self.current_tetromino.move_down()
+
+        # move was allowed and the move is done. Record the location of the piece
+        self.store_tetromino()
 
     # private methods 
     def _draw_previewer(self):
