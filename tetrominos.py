@@ -122,29 +122,10 @@ class Tetromino(object):
         self.current_position = self.next_position()
 
     def move_left(self):
-        current_position_info = self.position_properties[self.current_position]
-
-        # need to detect left collisions
-        min_left = min([pos['left'] for pos in current_position_info])
-
-        if self.left + min_left <= 0:
-            return
-        else:
-            self.left -= CELL_WIDTH
+        self.left -= CELL_WIDTH
 
     def move_right(self):
-        current_position_info = self.position_properties[self.current_position]
-
-        # need to detect left collisions
-        max_left = max([pos['left'] for pos in current_position_info])
-        width =  max([pos['width'] for pos in current_position_info])
-
-        edge = (COLUMNS * CELL_WIDTH) - width
-
-        if self.left >= edge:
-            return
-        else:
-            self.left += CELL_WIDTH
+        self.left += CELL_WIDTH
 
     def move_down(self):
         self.top += CELL_HEIGHT
