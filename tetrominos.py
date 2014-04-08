@@ -166,9 +166,12 @@ class Straight(Tetromino):
 class Square(Tetromino):
     def __init__(self):
         super(Square, self).__init__()
-        self.positions = [0]
+        self.positions = [0,1]
         self.position_properties = [
-            [{'left': 0, 'top': 0, 'width': CELL_WIDTH * 2 ,'height': CELL_HEIGHT * 2 }]
+            [
+                {'left': 0, 'top': 0, 'width': CELL_WIDTH * 2 ,'height': CELL_HEIGHT * 1 },
+                {'left': 0, 'top': 1, 'width': CELL_WIDTH * 2 ,'height': CELL_HEIGHT * 1 }
+            ]
         ]
 
     def render(self, surface):
