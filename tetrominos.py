@@ -91,12 +91,16 @@ class Tetromino(object):
         self.current_position = 0
 
     def render(self, surface):
-        """ 
-        override in specific classes. Each piece type
-        has custom attributes - where it starts, how
-        it turns, it's color, etc.
-        """
-        raise("Cannot use base implementation")
+        # Rect(left, top, width, height)
+        positions = self.position_properties[self.current_position]
+
+        for piece_position in positions:
+            pygame.draw.rect(surface, self.color, [
+                self.left + (piece_position['left'] * CELL_WIDTH),
+                self.top + (piece_position['top'] * CELL_HEIGHT),
+                piece_position['width'],
+                piece_position['height']
+            ])
 
     def position_string(self):
         return "({0}, {1}) [position: {2}]".format(self.left, self.top, self.get_position_properties())
@@ -135,6 +139,8 @@ class Straight(Tetromino):
         super(Straight, self).__init__()
         self.positions = [0,1,2,3]
 
+        self.color = CYAN
+
         # ok so all of the pieces are inside of a bounding box..
         # straights is a 4x4 box and the piece rotates within it.
         # there are four distinct positions for the straight piece
@@ -148,25 +154,13 @@ class Straight(Tetromino):
 
         self.current_position = 0
 
-    # I'm hoping this method can be refactored into a single method
-    # and placed in the base class
-    def render(self, surface):
-        # Rect(left, top, width, height)
-        positions = self.position_properties[self.current_position]
-
-        # NOTE: self.top and self.left will change with the user's/game's movements
-        for position in positions:
-            pygame.draw.rect(surface, CYAN, [
-                self.left + (position['left'] * CELL_WIDTH),
-                self.top + (position['top'] * CELL_HEIGHT),
-                position['width'],
-                position['height']
-            ])
-
 class Square(Tetromino):
     def __init__(self):
         super(Square, self).__init__()
         self.positions = [0,1]
+
+        self.color = YELLOW
+
         self.position_properties = [
             [
                 {'left': 0, 'top': 0, 'width': CELL_WIDTH * 2 ,'height': CELL_HEIGHT * 1 },
@@ -194,6 +188,8 @@ class TShape(Tetromino):
 
         self.positions = [0,1,2,3]
 
+        self.color = PURPLE
+
         # t-shape is 3x3
         # drawing multiple shapes for each position
         self.position_properties = [
@@ -217,24 +213,14 @@ class TShape(Tetromino):
 
         self.current_position = 0
 
-    def render(self, surface):
-        # Rect(left, top, width, height)
-        positions = self.position_properties[self.current_position]
-
-        for piece_position in positions:
-            pygame.draw.rect(surface, PURPLE, [
-                self.left + (piece_position['left'] * CELL_WIDTH),
-                self.top + (piece_position['top'] * CELL_HEIGHT),
-                piece_position['width'],
-                piece_position['height']
-            ])
-
 class SShape(Tetromino):
     def __init__(self):
         super(SShape, self).__init__()
         # initial position is horizontal
 
         self.positions = [0,1,2,3]
+
+        self.color = GREEN
 
         # s-shape bounding box is 4x4
         # drawing multiple shapes for each position
@@ -259,24 +245,14 @@ class SShape(Tetromino):
 
         self.current_position = 0
 
-    def render(self, surface):
-        # Rect(left, top, width, height)
-        positions = self.position_properties[self.current_position]
-
-        for piece_position in positions:
-            pygame.draw.rect(surface, GREEN, [
-                self.left + (piece_position['left'] * CELL_WIDTH),
-                self.top + (piece_position['top'] * CELL_HEIGHT),
-                piece_position['width'],
-                piece_position['height']
-            ])
-
 class ZShape(Tetromino):
     def __init__(self):
         super(ZShape, self).__init__()
         # initial position is horizontal
 
         self.positions = [0,1,2,3]
+
+        self.color = RED
 
         # z-shape bounding box is 3x3
         # drawing multiple shapes for each position
@@ -301,24 +277,14 @@ class ZShape(Tetromino):
 
         self.current_position = 0
 
-    def render(self, surface):
-        # Rect(left, top, width, height)
-        positions = self.position_properties[self.current_position]
-
-        for piece_position in positions:
-            pygame.draw.rect(surface, RED, [
-                self.left + (piece_position['left'] * CELL_WIDTH),
-                self.top + (piece_position['top'] * CELL_HEIGHT),
-                piece_position['width'],
-                piece_position['height']
-            ])
-
 class LGun(Tetromino):
     def __init__(self):
         super(LGun, self).__init__()
         # initial position is horizontal
 
         self.positions = [0,1,2,3]
+
+        self.color = BLUE
 
         # left gun bounding box is 3x3
         # drawing multiple shapes for each position
@@ -343,24 +309,14 @@ class LGun(Tetromino):
 
         self.current_position = 0
 
-    def render(self, surface):
-        # Rect(left, top, width, height)
-        positions = self.position_properties[self.current_position]
-
-        for piece_position in positions:
-            pygame.draw.rect(surface, BLUE, [
-                self.left + (piece_position['left'] * CELL_WIDTH),
-                self.top + (piece_position['top'] * CELL_HEIGHT),
-                piece_position['width'],
-                piece_position['height']
-            ])
-
 class RGun(Tetromino):
     def __init__(self):
         super(RGun, self).__init__()
         # initial position is horizontal
 
         self.positions = [0,1,2,3]
+
+        self.color = ORANGE
 
         # right gun bounding box is 3x3
         # drawing multiple shapes for each position
@@ -384,15 +340,3 @@ class RGun(Tetromino):
         ]
 
         self.current_position = 0
-
-    def render(self, surface):
-        # Rect(left, top, width, height)
-        positions = self.position_properties[self.current_position]
-
-        for piece_position in positions:
-            pygame.draw.rect(surface, ORANGE, [
-                self.left + (piece_position['left'] * CELL_WIDTH),
-                self.top + (piece_position['top'] * CELL_HEIGHT),
-                piece_position['width'],
-                piece_position['height']
-            ])
