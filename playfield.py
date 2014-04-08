@@ -26,13 +26,13 @@ class Playfield:
         # represent a square if possible. Going to try to use values
         # 0 = empty square, 1 = not empty/not usable
         # start all off as empty
-        # call like so: self.squares[row][column]
+        # call like so: self.squares[column][row] (think x,y)
 
         # NOTE: I'm thinking that once a piece is settled in a location,
         # we can just set the color of the square to be that of the color 
         # of the piece which filled it. Are there any reasons that this wouldn't
         # work?
-        self.squares = [[0 for x in xrange(COLUMNS)] for x in xrange(ROWS)]
+        self.squares = [[0 for x in xrange(ROWS)] for x in xrange(COLUMNS)]
 
     def draw(self):
         row_number = 0;
@@ -130,8 +130,7 @@ class Playfield:
             for i in range(piece_height):
                 squares["{0},{1}".format(start_left, start_top + i)] = 1
 
-        return [point.split(',') for point in squares]
-       
+        return [map(lambda(x): int(x), point.split(',')) for point in squares]
 
     def move_allowed(self, direction):
         points = self.get_tetromino_locations(direction)
@@ -145,7 +144,7 @@ class Playfield:
 
     def bound_by_wall(self, points):
         for point in points:
-            if int(point[0]) < 0 or int(point[0]) > COLUMNS - 1:
+            if point[0] < 0 or point[0] > COLUMNS - 1:
                 return True
 
         return False
@@ -165,6 +164,12 @@ class Playfield:
     def store_tetromino(self):
         # TODO: store the location of the current piece in
         # self.squares
+        current_squares = self.get_tetromino_locations()
+        # squares are stored [left,top] (think x,y)...
+        # 
+        for square in current_squares:
+            self.squares[ square[0] ][ square[1] ] = self.current_tetromino.color
+
         return
 
     def get_next_tetromino(self):
@@ -187,9 +192,6 @@ class Playfield:
             self.current_tetromino.move_right()
         elif direction == DOWN:
             self.current_tetromino.move_down()
-
-        # move was allowed and the move is done. Record the location of the piece
-        self.store_tetromino()
 
     # private methods 
     def _draw_previewer(self):
