@@ -151,8 +151,16 @@ class Playfield:
         if self.bound_by_wall(points):
             return False
 
-        print points
+        if self.tetrominos_present(points):
+            return False
+
+        #print points
         return True
+
+    def tetrominos_present(self, points):
+        for point in points:
+            if self.squares[ point[0] ][ point[1] ]:
+                return True
 
     def bound_by_wall(self, points):
         for point in points:
