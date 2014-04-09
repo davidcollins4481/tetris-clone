@@ -14,9 +14,6 @@ class Playfield:
         self.x = 0
         self.y = 0
 
-        # temporary
-        self.at_bottom = False
-
         self.generator = RandomTetrominoGenerator()
         self.previewer = PiecePreviewer(self.screen)
 
@@ -171,13 +168,12 @@ class Playfield:
         return False
 
     def reached_bottom(self):
-        # this is just temporary to test movements
-        if self.at_bottom:
-            # reset
-            self.at_bottom = False
-            return True
-        else:
+        points = self.get_tetromino_locations()
+        bottom_points = filter(lambda point: point[1] == ROWS - 1, points)
+        if len(bottom_points) == 0:
             return False
+        else:
+            return True
 
     def rotate_current(self):
         self.current_tetromino.rotate(self.surface)
