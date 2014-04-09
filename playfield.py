@@ -18,6 +18,7 @@ class Playfield:
         self.at_bottom = False
 
         self.generator = RandomTetrominoGenerator()
+        self.previewer = PiecePreviewer(self.screen)
 
         # current piece under user's control
         self.current_tetromino = self.generator.next()
@@ -213,6 +214,5 @@ class Playfield:
 
     # private methods 
     def _draw_previewer(self):
-        self.previewer = PiecePreviewer(self.screen)
         self.previewer.draw()
 
