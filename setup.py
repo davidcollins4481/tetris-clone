@@ -10,8 +10,7 @@ from setuptools import setup
 APP = ['tetris.py']
 DATA_FILES = []
 OPTIONS = {
-    'iconfile': 'resources/icons/Tetris.icns',
-    'argv_emulation': True
+    'iconfile': 'resources/icons/Tetris.icns'
 }
 
 setup(
