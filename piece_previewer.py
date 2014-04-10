@@ -13,4 +13,4 @@ class PiecePreviewer:
 
     def draw(self):
         self.screen.blit(self.surface, (self.x, self.y))
-	self.generator.sequence[-1].render(self.surface)
+	self.generator.sequence[0].render(self.surface)

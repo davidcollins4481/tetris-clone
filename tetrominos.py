@@ -24,7 +24,7 @@ class RandomTetrominoGenerator:
 	random.shuffle(list)
 	for x in list:
 		self.sequence.append(TetrominoFactory.create_tetromino(x))
-
+	print self.sequence
        #self.sequence = [ TetrominoFactory.create_tetromino(7) ]
 
 class TetrominoFactory:
