@@ -192,13 +192,22 @@ class Playfield:
 
     # processing key events
     def move_current(self, direction):
-        # and get next piece
+        # piece has reached the bottom of the board.
+        # Store it
         if self.reached_bottom():
             self.store_tetromino()
             self.get_next_tetromino()
             return
 
-        if not self.move_allowed(direction):
+        allowed = self.move_allowed(direction)
+
+        # piece is as far down as it can go
+        if not allowed and direction == DOWN:
+            self.store_tetromino()
+            self.get_next_tetromino()
+            return
+
+        if not allowed:
             return
 
         if direction == LEFT:
