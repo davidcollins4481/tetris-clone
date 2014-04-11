@@ -16,7 +16,7 @@ def main():
 
     playfield = Playfield(screen)
     playfield.draw()
-
+    pygame.key.set_repeat(100, 10)
     # this is the main game loop...this may get moved
     piece_ticker = 0
     # the lower this number is, the faster the pieces move
