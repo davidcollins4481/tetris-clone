@@ -190,23 +190,45 @@ class Playfield:
     def get_next_tetromino(self):
         self.current_tetromino = self.generator.next()
 
+    def complete_tetromino_movement(self):
+        self.store_tetromino()
+        # check for completed lines to remove
+        self.destroy_completed_lines()
+        self.get_next_tetromino()
+
+    def destroy_completed_lines(self):
+        # call like so: self.squares[column][row] (think x,y)
+        for row in range(ROWS):
+            # get the row's columns
+            columns = [self.squares[column][row] for column in range(COLUMNS)]
+
+            # get all empty squares...if none are returned, the row
+            # is filled
+            filled = len(filter(lambda(c): not c, columns)) == 0
+
+            if filled:
+                print "Row {0} filled".format(row)
+                for c in range(COLUMNS):
+                    self.squares[c][row] = 0
+
+                # TODO: Move all pieces above deleted row down a row
+
     # processing key events
     def move_current(self, direction):
         # piece has reached the bottom of the board.
         # Store it
         if self.reached_bottom():
-            self.store_tetromino()
-            self.get_next_tetromino()
+            self.complete_tetromino_movement()
             return
 
         allowed = self.move_allowed(direction)
 
         # piece is as far down as it can go
         if not allowed and direction == DOWN:
-            self.store_tetromino()
-            self.get_next_tetromino()
+            self.complete_tetromino_movement()
             return
 
+        # otherwise we're dealing with a side-to-side movement
         if not allowed:
             return
 
