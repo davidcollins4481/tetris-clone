@@ -207,11 +207,13 @@ class Playfield:
             filled = len(filter(lambda(c): not c, columns)) == 0
 
             if filled:
-                print "Row {0} filled".format(row)
                 for c in range(COLUMNS):
                     self.squares[c][row] = 0
 
                 # TODO: Move all pieces above deleted row down a row
+                for row_number in range(row, 0, -1):
+                    for c in range(COLUMNS):
+                        self.squares[c][row_number] = self.squares[c][row_number - 1]
 
     # processing key events
     def move_current(self, direction):
