@@ -10,6 +10,9 @@ class Playfield:
         self.surface = pygame.Surface((PLAYFIELD_WIDTH, PLAYFIELD_HEIGHT))
         self.surface.fill(PLAYFIELD_BGCOLOR)
 
+        # the lower this number is, the faster the pieces move
+        self.level_delay = 40
+
         # want a large right margin for the piece previewer
         self.x = 60
         self.y = 60
@@ -220,6 +223,9 @@ class Playfield:
             self.current_tetromino.move_right()
         elif direction == DOWN:
             self.current_tetromino.move_down()
+
+    def get_level_delay(self):
+        return self.level_delay
 
     # private methods 
     def _draw_previewer(self):

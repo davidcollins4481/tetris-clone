@@ -19,13 +19,12 @@ def main():
     pygame.key.set_repeat(100, 10)
     # this is the main game loop...this may get moved
     piece_ticker = 0
-    # the lower this number is, the faster the pieces move
-    speed = 10
+
     while True:
         FPSCLOCK.tick(FPS)
 
         piece_ticker += 1
-        if piece_ticker == speed:
+        if piece_ticker == playfield.get_level_delay():
             playfield.move_current(DOWN)
             piece_ticker = 0
 
