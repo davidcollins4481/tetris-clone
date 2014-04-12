@@ -12,5 +12,6 @@ class PiecePreviewer:
 	self.generator = generator
 
     def draw(self):
-        self.screen.blit(self.surface, (self.x, self.y))
-	self.generator.sequence[0].render(self.surface)
+	self.surface.fill(PREVIEWER_BGCOLOR)
+        self.generator.sequence[0].render(self.surface)
+	self.screen.blit(self.surface, (self.x, self.y)) 
