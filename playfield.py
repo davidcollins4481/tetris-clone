@@ -18,7 +18,7 @@ class Playfield:
         self.y = 60
 
         self.generator = RandomTetrominoGenerator()
-        self.previewer = PiecePreviewer(self.screen)
+        self.previewer = PiecePreviewer(self.screen, self.generator)
 
         # current piece under user's control
         self.current_tetromino = self.generator.next()
