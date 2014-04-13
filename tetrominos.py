@@ -157,7 +157,7 @@ class Straight(Tetromino):
 class Square(Tetromino):
     def __init__(self):
         super(Square, self).__init__()
-        self.positions = [0,1]
+        self.positions = [0]
 
         self.color = YELLOW
 
