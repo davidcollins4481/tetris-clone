@@ -1,5 +1,4 @@
 from constants import *
-from piece_previewer import *
 from tetrominos import RandomTetrominoGenerator
 
 import pygame
@@ -17,6 +16,7 @@ class Playfield:
         self.x = 60
         self.y = 60
 
+        self.score_keeper = ScoreKeeper(self.screen)
         self.generator = RandomTetrominoGenerator()
         self.previewer = PiecePreviewer(self.screen, self.generator)
 
@@ -51,6 +51,7 @@ class Playfield:
 
         self.screen.blit(self.surface, (self.x, self.y))
         self._draw_previewer()
+        self._draw_score_keeper()
 
     def draw_board_lines(self):
         # draw vertical border
@@ -231,3 +232,38 @@ class Playfield:
     def _draw_previewer(self):
         self.previewer.draw()
 
+    def _draw_score_keeper(self):
+        self.score_keeper.draw()
+
+class PiecePreviewer:
+    def __init__(self, screen, generator):
+        self.screen = screen
+        self.x = 450 
+        self.y = 140
+        self.surface = pygame.Surface((PREVIEWER_WIDTH, PREVIEWER_HEIGHT))
+        self.surface.fill(PREVIEWER_BGCOLOR)
+	self.generator = generator
+
+    def draw(self):
+	self.surface.fill(PREVIEWER_BGCOLOR)
+        self.generator.sequence[0].render(self.surface)
+	self.screen.blit(self.surface, (self.x, self.y)) 
+
+# we're going to score luke the Original Nintendo
+# version of the game did
+# http://tetris.wikia.com/wiki/Scoring
+
+# TODO
+# these should change...basically just copied in from preview code
+class ScoreKeeper:
+    def __init__(self, screen):
+        self.x = 450 
+        self.y = 340
+        self.screen = screen
+
+        self.surface = pygame.Surface((PREVIEWER_WIDTH, PREVIEWER_HEIGHT))
+        self.surface.fill(PREVIEWER_BGCOLOR)
+
+    def draw(self):
+        self.surface.fill(PREVIEWER_BGCOLOR)
+        self.screen.blit(self.surface, (self.x, self.y))
