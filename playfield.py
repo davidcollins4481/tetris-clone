@@ -11,7 +11,9 @@ class Playfield:
 
         # the lower this number is, the faster the pieces move
         self.level_delay = 40
-
+        # if we end up adding levels, we should make the delay
+        # be a function of the level number
+        self.level = 1
         # want a large right margin for the piece previewer
         self.x = 60
         self.y = 60
@@ -182,6 +184,7 @@ class Playfield:
 
     def destroy_completed_lines(self):
         # call like so: self.squares[column][row] (think x,y)
+        deleted_rows = 0
         for row in range(ROWS):
             # get the row's columns
             columns = [self.squares[column][row] for column in range(COLUMNS)]
@@ -191,6 +194,8 @@ class Playfield:
             filled = len(filter(lambda(c): not c, columns)) == 0
 
             if filled:
+                deleted_rows += 1
+
                 for c in range(COLUMNS):
                     self.squares[c][row] = 0
 
@@ -198,6 +203,10 @@ class Playfield:
                 for row_number in range(row, 0, -1):
                     for c in range(COLUMNS):
                         self.squares[c][row_number] = self.squares[c][row_number - 1]
+
+        if deleted_rows > 0:
+            self.score_keeper.update_score(self.level, deleted_rows)
+
 
     # processing key events
     def move_current(self, direction):
@@ -259,7 +268,10 @@ class ScoreKeeper:
     def __init__(self, screen):
         self.x = 450 
         self.y = 340
+        self.score = 0
         self.screen = screen
+        # [0] = 1 row, etc
+        self.points = [40, 100, 300, 1200]
 
         self.surface = pygame.Surface((PREVIEWER_WIDTH, PREVIEWER_HEIGHT))
         self.surface.fill(PREVIEWER_BGCOLOR)
@@ -267,3 +279,11 @@ class ScoreKeeper:
     def draw(self):
         self.surface.fill(PREVIEWER_BGCOLOR)
         self.screen.blit(self.surface, (self.x, self.y))
+
+    def update_score(self, level, deleted_rows):
+        row_count_score = self.points[deleted_rows - 1]
+        self.score += row_count_score * level
+        print "Score: {0}".format(self.score)
+
+    def get_score(self):
+        return self.score
