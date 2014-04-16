@@ -5,7 +5,7 @@ import pygame
 # size...to do that, have to call pygame.init before
 # being able to access the screen into
 pygame.init()
-height = pygame.display.Info().current_h
+height = pygame.display.Info().current_h - 100
 width = height * .75
 
 SCREEN_SIZE = (int(width), int(height))
