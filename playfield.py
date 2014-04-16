@@ -15,8 +15,8 @@ class Playfield:
         # be a function of the level number
         self.level = 1
         # want a large right margin for the piece previewer
-        self.x = 60
-        self.y = 60
+        self.x = int(PLAYFIELD_WIDTH * .075)
+        self.y = int(PLAYFIELD_HEIGHT * .05)
 
         self.score_keeper = ScoreKeeper(self.screen)
         self.generator = RandomTetrominoGenerator()
@@ -247,8 +247,8 @@ class Playfield:
 class PiecePreviewer:
     def __init__(self, screen, generator):
         self.screen = screen
-        self.x = 450 
-        self.y = 140
+        self.x = int(SCREEN_SIZE[0] * .6)
+        self.y = int(SCREEN_SIZE[1] * .23)
         self.surface = pygame.Surface((PREVIEWER_WIDTH, PREVIEWER_HEIGHT))
         self.surface.fill(PREVIEWER_BGCOLOR)
 	self.generator = generator
@@ -266,8 +266,10 @@ class PiecePreviewer:
 # these should change...basically just copied in from preview code
 class ScoreKeeper:
     def __init__(self, screen):
-        self.x = 450 
-        self.y = 340
+
+        self.x = int(SCREEN_SIZE[0] * .6)
+        self.y = int(SCREEN_SIZE[1] * .50)
+
         self.score = 0
         self.screen = screen
         # [0] = 1 row, etc

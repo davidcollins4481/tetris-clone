@@ -6,8 +6,6 @@ from constants import *
 def main():
     global screen, FPSCLOCK
 
-    pygame.init()
-
     FPSCLOCK = pygame.time.Clock()
     screen = pygame.display.set_mode(SCREEN_SIZE)
     screen.fill(SCREEN_BGCOLOR)

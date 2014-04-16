@@ -1,5 +1,14 @@
 # width / height in pixels
-SCREEN_SIZE = (600,800)
+import pygame
+
+# want to make the width/height be determined by the screen
+# size...to do that, have to call pygame.init before
+# being able to access the screen into
+pygame.init()
+height = pygame.display.Info().current_h
+width = height * .75
+
+SCREEN_SIZE = (int(width), int(height))
 SCREEN_BGCOLOR = (0,0,0)
 
 # PLAYFIELD CONSTANTS
@@ -33,8 +42,8 @@ FPS = 40
 
 # preview constants
 PREVIEWER_BGCOLOR = (100,100,100)
-PREVIEWER_WIDTH = 120
-PREVIEWER_HEIGHT = 120
+PREVIEWER_WIDTH = int(height * .15)
+PREVIEWER_HEIGHT = PREVIEWER_WIDTH
 
 # /PLAYFIELD CONSTANTS
 
