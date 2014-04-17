@@ -1,6 +1,6 @@
 from constants import *
 from tetrominos import RandomTetrominoGenerator
-
+import random
 import pygame
 
 class Playfield:
@@ -17,6 +17,9 @@ class Playfield:
         # want a large right margin for the piece previewer
         self.x = int(PLAYFIELD_WIDTH * .075)
         self.y = int(PLAYFIELD_HEIGHT * .05)
+
+        self.game_over_rendered = False
+        self.game_over = False
 
         self.score_keeper = ScoreKeeper(self.screen)
         self.generator = RandomTetrominoGenerator()
@@ -74,18 +77,13 @@ class Playfield:
         self.surface.fill(SCREEN_BGCOLOR)
 
         # re-draw board with settled pieces
-        self.draw()
-
-        self.screen.blit(self.surface, (self.x, self.y))
-        # would be great if the only thing this method did
-        # was render the board and current piece. No code 
-        # for the logic of when the next piece should be 
-        # retrieved
-#        if self.current_tetromino.top > CELL_HEIGHT*(ROWS-3):
-#            self.current_tetromino = self.generator.next()
-
-        self.current_tetromino.render(self.surface)
-        self.screen.blit(self.surface, (self.x, self.y))
+        if self.is_game_over():
+            self.draw_game_over()
+        else:
+            self.draw()
+            self.screen.blit(self.surface, (self.x, self.y))
+            self.current_tetromino.render(self.surface)
+            self.screen.blit(self.surface, (self.x, self.y))
 
     # sending a direction to this (see constants LEFT, RIGHT, DOWN)
     # will get the locations AFTER that movement has been made.
@@ -136,6 +134,11 @@ class Playfield:
             return False
 
         if self.tetrominos_present(points):
+            return False
+
+        # check if game should end
+        if self.no_more_moves():
+            self.game_over = True
             return False
 
         #print points
@@ -207,6 +210,32 @@ class Playfield:
         if deleted_rows > 0:
             self.score_keeper.update_score(self.level, deleted_rows)
 
+    def is_game_over(self):
+        return False
+        #return self.game_over
+
+    def draw_game_over(self):
+        if self.game_over_rendered:
+            return
+
+        self.game_over_rendered = True
+
+        colors = [CYAN, YELLOW, PURPLE, GREEN, RED, BLUE, ORANGE]
+
+        for row in range(ROWS):
+            for column in range(COLUMNS):
+                pygame.draw.rect(self.surface, colors[random.randint(0,len(colors) - 1)], [
+                    CELL_WIDTH * column,
+                    CELL_HEIGHT * row,
+                    CELL_WIDTH,
+                    CELL_HEIGHT
+                ])
+
+        self.screen.blit(self.surface, (self.x, self.y))
+
+    def no_more_moves(self):
+        #return True
+        return False
 
     # processing key events
     def move_current(self, direction):
