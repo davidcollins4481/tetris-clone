@@ -275,13 +275,20 @@ class ScoreKeeper:
         # [0] = 1 row, etc
         self.points = [40, 100, 300, 1200]
 
+	self.scorefont = pygame.font.SysFont("Impact", 60)
+	self.scoretext = self.scorefont.render(str(self.score), 1, (255,255,0))
+
         self.surface = pygame.Surface((PREVIEWER_WIDTH, PREVIEWER_HEIGHT))
         self.surface.fill(PREVIEWER_BGCOLOR)
 
+	self.screen.blit(self.scoretext, (self.x, self.y))
+
     def draw(self):
         self.surface.fill(PREVIEWER_BGCOLOR)
+        self.scoretext = self.scorefont.render(str(self.score), 1, (255,255,0))
         self.screen.blit(self.surface, (self.x, self.y))
-
+	self.screen.blit(self.scoretext, (self.x, self.y))
+	
     def update_score(self, level, deleted_rows):
         row_count_score = self.points[deleted_rows - 1]
         self.score += row_count_score * level
