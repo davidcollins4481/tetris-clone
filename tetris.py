@@ -36,7 +36,7 @@ def main():
             # them from here, may be best to create a separate
             # class to manage the movements
             if event.type == pygame.KEYDOWN:
-                if event.key == K_SPACE:
+                if event.key == K_SPACE or event.key == K_UP:
                     playfield.rotate_current()
                 elif event.key == K_LEFT:
                     playfield.move_current(LEFT)
