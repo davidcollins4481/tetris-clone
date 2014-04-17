@@ -21,31 +21,34 @@ def main():
     while True:
         FPSCLOCK.tick(FPS)
 
-        piece_ticker += 1
-        if piece_ticker == playfield.get_level_delay():
-            playfield.move_current(DOWN)
-            piece_ticker = 0
+        if playfield.is_game_over():
+            print "Game Over"
+        else:
+            piece_ticker += 1
+            if piece_ticker == playfield.get_level_delay():
+                playfield.move_current(DOWN)
+                piece_ticker = 0
+
 
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
 
-            # it seems better to process key events here
-            # rather than in the playfield class...if we moved
-            # them from here, may be best to create a separate
-            # class to manage the movements
             if event.type == pygame.KEYDOWN:
-                if event.key == K_SPACE or event.key == K_UP:
-                    playfield.rotate_current()
-                elif event.key == K_LEFT:
-                    playfield.move_current(LEFT)
-                elif event.key == K_RIGHT:
-                    playfield.move_current(RIGHT)
-                elif event.key == K_DOWN:
-                    playfield.move_current(DOWN)
-
-            # do this last
+                if not playfield.is_game_over():
+                    if event.key == K_SPACE or event.key == K_UP:
+                        playfield.rotate_current()
+                    elif event.key == K_LEFT:
+                        playfield.move_current(LEFT)
+                    elif event.key == K_RIGHT:
+                        playfield.move_current(RIGHT)
+                    elif event.key == K_DOWN:
+                        playfield.move_current(DOWN)
+                else:
+                    # game is over..only allow restart
+                    if event.key == K_r:
+                        print "Restarting game"
 
         playfield.update()
         pygame.display.update()
