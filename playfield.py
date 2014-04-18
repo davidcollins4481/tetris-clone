@@ -73,7 +73,6 @@ class Playfield:
         # renderend every single time. This seemed to 
         # be the way to do it from what I've gathered - Dave
         self.surface.fill(SCREEN_BGCOLOR)
-
         # re-draw board with settled pieces
         if self.is_game_over():
             self.draw_game_over()
@@ -223,6 +222,37 @@ class Playfield:
 
         self.screen.blit(self.surface, (self.x, self.y))
 
+        # render this on top of the board
+        # x, y, width, height
+        width = SCREEN_SIZE[0] * .80
+        height = SCREEN_SIZE[1] * .40
+        game_over_surface = pygame.Surface((width, height))
+
+        game_over_surface.fill((255,255,255))
+
+        pygame.draw.rect(game_over_surface, (0,0,0), [
+            1,
+            1,
+            width - 2,
+            height - 2
+        ])
+
+        # TODO: define font sizes as percentages of
+        # screen dimensions
+        font = pygame.font.SysFont(FONT, 60)
+        label = font.render("Game Over!", 1, (255,255,0))
+
+        game_over_surface.blit(label, (width * .25, height * .35))
+
+        font = pygame.font.SysFont(FONT, 20)
+        label = font.render("Press 'r' to play again", 1, (255,255,255))
+
+        game_over_surface.blit(label, (width * .35, height * .55))
+
+        x = (SCREEN_SIZE[0] / 2) - (width / 2)
+        y = (SCREEN_SIZE[1] / 2) - (height / 2)
+        self.screen.blit(game_over_surface, (x,y))
+
     def no_more_moves(self, points):
 
         for point in points:
@@ -265,6 +295,7 @@ class Playfield:
         return self.level_delay
 
     def restart_game(self):
+        self.screen.fill(SCREEN_BGCOLOR)
         self.set_initial_game_state()
 
     # private methods 
@@ -302,7 +333,7 @@ class ScoreKeeper:
         # [0] = 1 row, etc
         self.points = [40, 100, 300, 1200]
 
-	self.scorefont = pygame.font.SysFont("Impact", 60)
+	self.scorefont = pygame.font.SysFont(FONT, 60)
 	self.scoretext = self.scorefont.render(str(self.score), 1, (255,255,0))
 
         self.surface = pygame.Surface((PREVIEWER_WIDTH, PREVIEWER_HEIGHT))
