@@ -9,15 +9,17 @@ class Playfield:
         self.surface = pygame.Surface((PLAYFIELD_WIDTH, PLAYFIELD_HEIGHT))
         self.surface.fill(PLAYFIELD_BGCOLOR)
 
+        # want a large right margin for the piece previewer
+        self.x = int(PLAYFIELD_WIDTH * .075)
+        self.y = int(PLAYFIELD_HEIGHT * .05)
+        self.set_initial_game_state()
+ 
+    def set_initial_game_state(self):
         # the lower this number is, the faster the pieces move
         self.level_delay = 40
         # if we end up adding levels, we should make the delay
         # be a function of the level number
         self.level = 1
-        # want a large right margin for the piece previewer
-        self.x = int(PLAYFIELD_WIDTH * .075)
-        self.y = int(PLAYFIELD_HEIGHT * .05)
-
         self.game_over_rendered = False
         self.game_over = False
 
@@ -34,10 +36,6 @@ class Playfield:
         # start all off as empty
         # call like so: self.squares[column][row] (think x,y)
 
-        # NOTE: I'm thinking that once a piece is settled in a location,
-        # we can just set the color of the square to be that of the color 
-        # of the piece which filled it. Are there any reasons that this wouldn't
-        # work?
         self.squares = [[0 for x in xrange(ROWS)] for x in xrange(COLUMNS)]
 
     def draw(self):
@@ -165,11 +163,8 @@ class Playfield:
         self.current_tetromino.rotate(self.surface)
 
     def store_tetromino(self):
-        # TODO: store the location of the current piece in
-        # self.squares
         current_squares = self.get_tetromino_locations()
         # squares are stored [left,top] (think x,y)...
-        # 
         for square in current_squares:
             self.squares[ square[0] ][ square[1] ] = { 'color': self.current_tetromino.color }
 
@@ -207,7 +202,6 @@ class Playfield:
             self.score_keeper.update_score(self.level, deleted_rows)
 
     def is_game_over(self):
-        #return False
         return self.game_over
 
     def draw_game_over(self):
@@ -270,6 +264,9 @@ class Playfield:
     def get_level_delay(self):
         return self.level_delay
 
+    def restart_game(self):
+        self.set_initial_game_state()
+
     # private methods 
     def _draw_previewer(self):
         self.previewer.draw()
@@ -294,9 +291,6 @@ class PiecePreviewer:
 # we're going to score luke the Original Nintendo
 # version of the game did
 # http://tetris.wikia.com/wiki/Scoring
-
-# TODO
-# these should change...basically just copied in from preview code
 class ScoreKeeper:
     def __init__(self, screen):
 

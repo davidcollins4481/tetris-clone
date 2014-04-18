@@ -45,6 +45,7 @@ def main():
                 else:
                     # game is over..only allow restart
                     if event.key == K_r:
+                        playfield.restart_game()
                         print "Restarting game"
 
         playfield.update()
