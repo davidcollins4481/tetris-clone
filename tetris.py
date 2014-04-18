@@ -21,14 +21,11 @@ def main():
     while True:
         FPSCLOCK.tick(FPS)
 
-        if playfield.is_game_over():
-            print "Game Over"
-        else:
+        if not playfield.is_game_over():
             piece_ticker += 1
             if piece_ticker == playfield.get_level_delay():
                 playfield.move_current(DOWN)
                 piece_ticker = 0
-
 
         for event in pygame.event.get():
             if event.type == QUIT:

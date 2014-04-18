@@ -134,14 +134,11 @@ class Playfield:
             return False
 
         if self.tetrominos_present(points):
+            if self.no_more_moves(points):
+                self.game_over = True
+
             return False
 
-        # check if game should end
-        if self.no_more_moves():
-            self.game_over = True
-            return False
-
-        #print points
         return True
 
     def tetrominos_present(self, points):
@@ -195,7 +192,6 @@ class Playfield:
             # get all empty squares...if none are returned, the row
             # is filled
             filled = len(filter(lambda(c): not c, columns)) == 0
-
             if filled:
                 deleted_rows += 1
 
@@ -211,8 +207,8 @@ class Playfield:
             self.score_keeper.update_score(self.level, deleted_rows)
 
     def is_game_over(self):
-        return False
-        #return self.game_over
+        #return False
+        return self.game_over
 
     def draw_game_over(self):
         if self.game_over_rendered:
@@ -233,8 +229,13 @@ class Playfield:
 
         self.screen.blit(self.surface, (self.x, self.y))
 
-    def no_more_moves(self):
-        #return True
+    def no_more_moves(self, points):
+
+        for point in points:
+            column,row = point[0],point[1]
+            if row <= 1:
+                return True
+
         return False
 
     # processing key events
@@ -249,8 +250,11 @@ class Playfield:
 
         # piece is as far down as it can go
         if not allowed and direction == DOWN:
-            self.complete_tetromino_movement()
-            return
+            if self.is_game_over():
+                return
+            else:
+                self.complete_tetromino_movement()
+                return
 
         # otherwise we're dealing with a side-to-side movement
         if not allowed:
@@ -321,7 +325,6 @@ class ScoreKeeper:
     def update_score(self, level, deleted_rows):
         row_count_score = self.points[deleted_rows - 1]
         self.score += row_count_score * level
-        print "Score: {0}".format(self.score)
 
     def get_score(self):
         return self.score
