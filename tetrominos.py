@@ -24,8 +24,6 @@ class RandomTetrominoGenerator:
 	random.shuffle(list)
 	for x in list:
 		self.sequence.append(TetrominoFactory.create_tetromino(x))
-	print self.sequence
-       #self.sequence = [ TetrominoFactory.create_tetromino(7) ]
 
 class TetrominoFactory:
     """
@@ -89,10 +87,14 @@ class Tetromino(object):
         self.height = 0
         self.positions = []
         self.current_position = 0
+        self.wallkick_overage = 0
 
     def render(self, surface):
         # Rect(left, top, width, height)
         positions = self.position_properties[self.current_position]
+        overage = self.wallkick_overage * CELL_WIDTH
+        if overage != 0:
+            print "Overage: {0}" .format(overage)
 
         for piece_position in positions:
             pygame.draw.rect(surface, self.color, [
@@ -102,15 +104,22 @@ class Tetromino(object):
                 piece_position['height']
             ])
 
+        #self.wallkick_overage = 0
+
     def position_string(self):
         return "({0}, {1}) [position: {2}]".format(self.left, self.top, self.get_position_properties())
 
     def get_position_properties(self):
         return self.position_properties[self.current_position]
 
+    def get_position_by_number(self, position_number):
+        return self.position_properties[position_number]
+
+    def current_position(self):
+        return self.current_position
+
     def next_position(self):
         number_positions = len(self.positions)
-        next = 0
         # we're on the last position
         if self.current_position == number_positions - 1:
             next = 0
@@ -121,8 +130,14 @@ class Tetromino(object):
         # info
         return next
 
-    # this behavior seems generic enough to move here
-    def rotate(self, surface):
+    def coords(self):
+        return (self.top, self.left)
+
+    # here overage is used for wallkicks
+    def rotate(self, surface, overage = 0):
+        if overage:
+            self.wallkick_overage = overage
+            self.left += overage * CELL_WIDTH
         self.current_position = self.next_position()
 
     def move_left(self):
@@ -146,10 +161,10 @@ class Straight(Tetromino):
         # there are four distinct positions for the straight piece
         # even though it seems as though there would only be two.
         self.position_properties = [
-            [{ 'left': 0, 'top': 1, 'width': CELL_WIDTH * 4, 'height': CELL_HEIGHT     }],
-            [{ 'left': 2, 'top': 0, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 4 }],
-            [{ 'left': 0, 'top': 2, 'width': CELL_WIDTH * 4, 'height': CELL_HEIGHT     }],
-            [{ 'left': 1, 'top': 0, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 4 }]
+                [{ 'left': 0, 'top': 1, 'width': CELL_WIDTH * 4, 'height': CELL_HEIGHT, 'total_width': CELL_WIDTH * 4     }],
+                [{ 'left': 2, 'top': 0, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 4, 'total_width': CELL_WIDTH }],
+                [{ 'left': 0, 'top': 2, 'width': CELL_WIDTH * 4, 'height': CELL_HEIGHT, 'total_width': CELL_WIDTH * 4     }],
+                [{ 'left': 1, 'top': 0, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 4, 'total_width': CELL_WIDTH }]
         ]
 
         self.current_position = 0
@@ -163,8 +178,8 @@ class Square(Tetromino):
 
         self.position_properties = [
             [
-                {'left': 0, 'top': 0, 'width': CELL_WIDTH * 2 ,'height': CELL_HEIGHT * 1 },
-                {'left': 0, 'top': 1, 'width': CELL_WIDTH * 2 ,'height': CELL_HEIGHT * 1 }
+                {'left': 0, 'top': 0, 'width': CELL_WIDTH * 2 ,'height': CELL_HEIGHT * 1, 'total_width': CELL_WIDTH * 2 },
+                {'left': 0, 'top': 1, 'width': CELL_WIDTH * 2 ,'height': CELL_HEIGHT * 1, 'total_width': CELL_WIDTH * 2 }
             ]
         ]
 
@@ -194,20 +209,20 @@ class TShape(Tetromino):
         # drawing multiple shapes for each position
         self.position_properties = [
             [
-                { 'left': 0, 'top': 1, 'width': CELL_WIDTH * 3, 'height': CELL_HEIGHT     },
-                { 'left': 1 ,'top': 0, 'width': CELL_WIDTH,     'height': CELL_HEIGHT     }
+                { 'left': 0, 'top': 1, 'width': CELL_WIDTH * 3, 'height': CELL_HEIGHT, 'total_width': CELL_WIDTH * 3      },
+                { 'left': 1 ,'top': 0, 'width': CELL_WIDTH,     'height': CELL_HEIGHT, 'total_width': CELL_WIDTH * 3     }
             ],
             [
-                { 'left': 1, 'top': 0, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 3 },
-                { 'left': 2, 'top': 1, 'width': CELL_WIDTH,     'height': CELL_HEIGHT     }
+                { 'left': 1, 'top': 0, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 3, 'total_width': CELL_WIDTH * 2 },
+                { 'left': 2, 'top': 1, 'width': CELL_WIDTH,     'height': CELL_HEIGHT, 'total_width': CELL_WIDTH * 2     }
             ],
             [
-                { 'left': 0, 'top': 1, 'width': CELL_WIDTH * 3, 'height': CELL_HEIGHT     },
-                { 'left': 1, 'top': 2, 'width': CELL_WIDTH,     'height': CELL_HEIGHT     }
+                { 'left': 0, 'top': 1, 'width': CELL_WIDTH * 3, 'height': CELL_HEIGHT, 'total_width': CELL_WIDTH * 3     },
+                { 'left': 1, 'top': 2, 'width': CELL_WIDTH,     'height': CELL_HEIGHT, 'total_width': CELL_WIDTH * 3     }
             ],
             [
-                { 'left': 1, 'top': 0, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 3 },
-                { 'left': 0, 'top': 1, 'width': CELL_WIDTH,     'height': CELL_HEIGHT     }
+                { 'left': 1, 'top': 0, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 3, 'total_width': CELL_WIDTH * 2 },
+                { 'left': 0, 'top': 1, 'width': CELL_WIDTH,     'height': CELL_HEIGHT,     'total_width': CELL_WIDTH * 2 }
             ]
         ]
 
@@ -226,20 +241,20 @@ class SShape(Tetromino):
         # drawing multiple shapes for each position
         self.position_properties = [
             [
-                { 'left': 1, 'top': 0, 'width': CELL_WIDTH * 2, 'height': CELL_HEIGHT     },
-                { 'left': 0 ,'top': 1, 'width': CELL_WIDTH * 2, 'height': CELL_HEIGHT     }
+                { 'left': 1, 'top': 0, 'width': CELL_WIDTH * 2, 'height': CELL_HEIGHT, 'total_width': CELL_WIDTH * 3     },
+                { 'left': 0 ,'top': 1, 'width': CELL_WIDTH * 2, 'height': CELL_HEIGHT, 'total_width': CELL_WIDTH * 3     }
             ],
             [
-                { 'left': 1, 'top': 0, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 2 },
-                { 'left': 2, 'top': 1, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 2 }
+                { 'left': 1, 'top': 0, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 2, 'total_width': CELL_WIDTH * 2 },
+                { 'left': 2, 'top': 1, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 2, 'total_width': CELL_WIDTH * 2 }
             ],
             [
-                { 'left': 1, 'top': 1, 'width': CELL_WIDTH * 2, 'height': CELL_HEIGHT     },
-                { 'left': 0 ,'top': 2, 'width': CELL_WIDTH * 2, 'height': CELL_HEIGHT     }
+                { 'left': 1, 'top': 1, 'width': CELL_WIDTH * 2, 'height': CELL_HEIGHT, 'total_width': CELL_WIDTH * 3 },
+                { 'left': 0 ,'top': 2, 'width': CELL_WIDTH * 2, 'height': CELL_HEIGHT, 'total_width': CELL_WIDTH * 3 }
             ],
             [
-                { 'left': 0, 'top': 0, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 2 },
-                { 'left': 1, 'top': 1, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 2 }
+                { 'left': 0, 'top': 0, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 2, 'total_width': CELL_WIDTH * 2 },
+                { 'left': 1, 'top': 1, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 2, 'total_width' : CELL_WIDTH * 2 }
             ]
         ]
 
@@ -258,20 +273,20 @@ class ZShape(Tetromino):
         # drawing multiple shapes for each position
         self.position_properties = [
             [
-                { 'left': 0, 'top': 0, 'width': CELL_WIDTH * 2, 'height': CELL_HEIGHT     },
-                { 'left': 1 ,'top': 1, 'width': CELL_WIDTH * 2, 'height': CELL_HEIGHT     }
+                { 'left': 0, 'top': 0, 'width': CELL_WIDTH * 2, 'height': CELL_HEIGHT, 'total_width': CELL_WIDTH * 3 },
+                { 'left': 1 ,'top': 1, 'width': CELL_WIDTH * 2, 'height': CELL_HEIGHT, 'total_width': CELL_WIDTH * 3 }
             ],
             [
-                { 'left': 2, 'top': 0, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 2 },
-                { 'left': 1, 'top': 1, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 2 }
+                { 'left': 2, 'top': 0, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 2, 'total_width':   CELL_WIDTH * 2 },
+                { 'left': 1, 'top': 1, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 2, 'total_width': CELL_WIDTH * 2 }
             ],
             [
-                { 'left': 0, 'top': 1, 'width': CELL_WIDTH * 2, 'height': CELL_HEIGHT     },
-                { 'left': 1 ,'top': 2, 'width': CELL_WIDTH * 2, 'height': CELL_HEIGHT     }
+                { 'left': 0, 'top': 1, 'width': CELL_WIDTH * 2, 'height': CELL_HEIGHT, 'total_width': CELL_WIDTH * 3 },
+                { 'left': 1 ,'top': 2, 'width': CELL_WIDTH * 2, 'height': CELL_HEIGHT, 'total_width': CELL_WIDTH * 3 }
             ],
             [
-                { 'left': 1, 'top': 0, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 2 },
-                { 'left': 0, 'top': 1, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 2 }
+                { 'left': 1, 'top': 0, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 2, 'total_width': CELL_WIDTH * 2 },
+                { 'left': 0, 'top': 1, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 2, 'total_width': CELL_WIDTH * 2 }
             ]
         ]
 
@@ -290,20 +305,20 @@ class LGun(Tetromino):
         # drawing multiple shapes for each position
         self.position_properties = [
             [
-                { 'left': 0, 'top': 0, 'width': CELL_WIDTH, 'height': CELL_HEIGHT },
-                { 'left': 0 ,'top': 1, 'width': CELL_WIDTH * 3, 'height': CELL_HEIGHT     }
+                { 'left': 0, 'top': 0, 'width': CELL_WIDTH, 'height': CELL_HEIGHT, 'total_width': CELL_WIDTH * 3 },
+                { 'left': 0 ,'top': 1, 'width': CELL_WIDTH * 3, 'height': CELL_HEIGHT, 'total_width': CELL_WIDTH * 3 }
             ],
             [
-                { 'left': 1, 'top': 0, 'width': CELL_WIDTH * 2,     'height': CELL_HEIGHT },
-                { 'left': 1, 'top': 0, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 3 }
+                { 'left': 1, 'top': 0, 'width': CELL_WIDTH * 2,     'height': CELL_HEIGHT, 'total_width': CELL_WIDTH * 2 },
+                { 'left': 1, 'top': 0, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 3, 'total_width': CELL_WIDTH * 2}
             ],
             [
-                { 'left': 0, 'top': 1, 'width': CELL_WIDTH * 3, 'height': CELL_HEIGHT     },
-                { 'left': 2 ,'top': 1, 'width': CELL_WIDTH, 'height': CELL_HEIGHT * 2 }
+                { 'left': 0, 'top': 1, 'width': CELL_WIDTH * 3, 'height': CELL_HEIGHT, 'total_width': CELL_WIDTH * 3     },
+                { 'left': 2 ,'top': 1, 'width': CELL_WIDTH, 'height': CELL_HEIGHT * 2, 'total_width': CELL_WIDTH * 3 }
             ],
             [
-                { 'left': 1, 'top': 0, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 3 },
-                { 'left': 0, 'top': 2, 'width': CELL_WIDTH * 2,     'height': CELL_HEIGHT }
+                { 'left': 1, 'top': 0, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 3 , 'total_width': CELL_WIDTH * 2},
+                { 'left': 0, 'top': 2, 'width': CELL_WIDTH * 2,     'height': CELL_HEIGHT, 'total_width': CELL_WIDTH * 2}
             ]
         ]
 
@@ -322,20 +337,20 @@ class RGun(Tetromino):
         # drawing multiple shapes for each position
         self.position_properties = [
             [
-                { 'left': 2, 'top': 0, 'width': CELL_WIDTH, 'height': CELL_HEIGHT },
-                { 'left': 0 ,'top': 1, 'width': CELL_WIDTH * 3, 'height': CELL_HEIGHT     }
+                { 'left': 2, 'top': 0, 'width': CELL_WIDTH, 'height': CELL_HEIGHT, 'total_width': CELL_WIDTH * 3 },
+                { 'left': 0 ,'top': 1, 'width': CELL_WIDTH * 3, 'height': CELL_HEIGHT, 'total_width': CELL_WIDTH * 3 }
             ],
             [
-                { 'left': 1, 'top': 2, 'width': CELL_WIDTH * 2,     'height': CELL_HEIGHT },
-                { 'left': 1, 'top': 0, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 3 }
+                { 'left': 1, 'top': 2, 'width': CELL_WIDTH * 2,     'height': CELL_HEIGHT, 'total_width': CELL_WIDTH * 2},
+                { 'left': 1, 'top': 0, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 3, 'total_width': CELL_WIDTH * 2 }
             ],
             [
-                { 'left': 0, 'top': 1, 'width': CELL_WIDTH * 3, 'height': CELL_HEIGHT     },
-                { 'left': 0 ,'top': 1, 'width': CELL_WIDTH, 'height': CELL_HEIGHT * 2 }
+                { 'left': 0, 'top': 1, 'width': CELL_WIDTH * 3, 'height': CELL_HEIGHT, 'total_width': CELL_WIDTH * 3},
+                { 'left': 0 ,'top': 1, 'width': CELL_WIDTH, 'height': CELL_HEIGHT * 2, 'total_width': CELL_WIDTH * 3}
             ],
             [
-                { 'left': 1, 'top': 0, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 3 },
-                { 'left': 0, 'top': 0, 'width': CELL_WIDTH * 2,     'height': CELL_HEIGHT }
+                { 'left': 1, 'top': 0, 'width': CELL_WIDTH,     'height': CELL_HEIGHT * 3, 'total_width': CELL_WIDTH * 2},
+                { 'left': 0, 'top': 0, 'width': CELL_WIDTH * 2,     'height': CELL_HEIGHT, 'total_width': CELL_WIDTH * 2}
             ]
         ]
 

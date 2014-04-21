@@ -159,7 +159,58 @@ class Playfield:
             return True
 
     def rotate_current(self):
-        self.current_tetromino.rotate(self.surface)
+        # wallkicks
+    
+        next_position_number = self.current_tetromino.next_position() 
+        next_position = self.current_tetromino.get_position_by_number(next_position_number)
+        current_position = self.current_tetromino.get_position_properties()
+
+        left_key = lambda(p): p['left']
+        farthest_right_key = lambda(p): p['width'] + p['left']
+
+        # 
+        overage = 0
+        ####
+        # check for kick on left side
+        ####
+
+        # get the lowest left
+        lowest_left_current = min(current_position, key=left_key)
+        lowest_left_next    = min(next_position, key=left_key)
+
+        coords = self.current_tetromino.coords()
+
+        if lowest_left_next['left']  < lowest_left_current['left']:
+            if coords[1] < 0:
+                # overages on the left side are defined in positive
+                # terms...since the piece must move to the right
+                overage = abs(coords[1]) / CELL_WIDTH
+                #print "wall kick needed (L) Coords: {0}".format(coords[1])
+
+        ####
+        # check for wallkicks on the right side
+        ####
+
+        # get the farthest right point for the current and next positions
+        farthest_right_current = max(current_position, key=farthest_right_key)
+        farthest_right_next    = max(next_position, key=farthest_right_key)
+        # figure that the piece with the largest left/width is the farthest
+        # right. Here we get the actual number for current/next positions
+        r_current = farthest_right_current['left'] + farthest_right_current['width']
+        r_next    = farthest_right_next['left'] + farthest_right_next['width']
+
+        # if the next piece position will be farther right, we need to 
+        # worry about wall kicks
+        if r_next > r_current:
+            # now that we've established that the next position is farther
+            # to the right, let's make sure that piece is close to the wall
+            next_position_width = farthest_right_next['total_width']
+            r_overage = (CELL_WIDTH * COLUMNS) - (coords[1] + next_position_width)
+            if r_overage < 0:
+                overage = r_overage / CELL_WIDTH
+                #print "Wall kick needed (R) Overage: {0}".format(overage)
+
+        self.current_tetromino.rotate(self.surface, overage)
 
     def store_tetromino(self):
         current_squares = self.get_tetromino_locations()
