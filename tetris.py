@@ -14,7 +14,7 @@ def main():
 
     playfield = Playfield(screen)
     playfield.draw()
-    pygame.key.set_repeat(100, 10)
+    pygame.key.set_repeat(100, 20)
     # this is the main game loop...this may get moved
     piece_ticker = 0
 

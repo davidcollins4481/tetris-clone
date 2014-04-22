@@ -92,9 +92,6 @@ class Tetromino(object):
     def render(self, surface):
         # Rect(left, top, width, height)
         positions = self.position_properties[self.current_position]
-        overage = self.wallkick_overage * CELL_WIDTH
-        if overage != 0:
-            print "Overage: {0}" .format(overage)
 
         for piece_position in positions:
             pygame.draw.rect(surface, self.color, [
@@ -103,8 +100,6 @@ class Tetromino(object):
                 piece_position['width'],
                 piece_position['height']
             ])
-
-        #self.wallkick_overage = 0
 
     def position_string(self):
         return "({0}, {1}) [position: {2}]".format(self.left, self.top, self.get_position_properties())

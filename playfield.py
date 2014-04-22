@@ -86,7 +86,7 @@ class Playfield:
     # will get the locations AFTER that movement has been made.
     # Calling without a direction argument, will get the current
     # location
-    def get_tetromino_locations(self, direction = 0):
+    def get_tetromino_locations(self, direction = 0, position=-1):
         row_offset = 0
         column_offset = 0
 
@@ -99,7 +99,11 @@ class Playfield:
 
         origin_row = (self.current_tetromino.top / CELL_HEIGHT) + row_offset
         origin_column = (self.current_tetromino.left / CELL_WIDTH) + column_offset
-        pieces = self.current_tetromino.get_position_properties()
+
+        if position != -1:
+            pieces = self.current_tetromino.get_position_by_number(position)
+        else:
+            pieces = self.current_tetromino.get_position_properties()
 
         # (left, top)
         # a dictionary will allow us to uniquify points
@@ -160,15 +164,15 @@ class Playfield:
 
     def rotate_current(self):
         # wallkicks
-    
         next_position_number = self.current_tetromino.next_position() 
         next_position = self.current_tetromino.get_position_by_number(next_position_number)
         current_position = self.current_tetromino.get_position_properties()
+        coords = self.current_tetromino.coords()
 
         left_key = lambda(p): p['left']
         farthest_right_key = lambda(p): p['width'] + p['left']
 
-        # 
+        #
         overage = 0
         ####
         # check for kick on left side
@@ -178,14 +182,11 @@ class Playfield:
         lowest_left_current = min(current_position, key=left_key)
         lowest_left_next    = min(next_position, key=left_key)
 
-        coords = self.current_tetromino.coords()
-
         if lowest_left_next['left']  < lowest_left_current['left']:
             if coords[1] < 0:
                 # overages on the left side are defined in positive
                 # terms...since the piece must move to the right
                 overage = abs(coords[1]) / CELL_WIDTH
-                #print "wall kick needed (L) Coords: {0}".format(coords[1])
 
         ####
         # check for wallkicks on the right side
@@ -208,9 +209,20 @@ class Playfield:
             r_overage = (CELL_WIDTH * COLUMNS) - (coords[1] + next_position_width)
             if r_overage < 0:
                 overage = r_overage / CELL_WIDTH
-                #print "Wall kick needed (R) Overage: {0}".format(overage)
+
+        if overage == 0:
+            if not self.is_rotation_possible(next_position_number):
+                return
 
         self.current_tetromino.rotate(self.surface, overage)
+
+    def is_rotation_possible(self, next_position_number, overage=0):
+        points = self.get_tetromino_locations(0, next_position_number)
+
+        if self.tetrominos_present(points):
+            return False
+        else:
+            return True
 
     def store_tetromino(self):
         current_squares = self.get_tetromino_locations()
