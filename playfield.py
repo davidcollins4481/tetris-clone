@@ -14,7 +14,7 @@ class Playfield:
         self.y = int(PLAYFIELD_HEIGHT * .05)
         self.set_initial_game_state()
 
-	pygame.mixer.music.load('Original Tetris Theme.mp3')
+	pygame.mixer.music.load('theme_music.ogg')
 	pygame.mixer.music.play(-1) 
     def set_initial_game_state(self):
         # the lower this number is, the faster the pieces move
