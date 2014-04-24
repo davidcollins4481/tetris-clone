@@ -22,6 +22,7 @@ class Playfield:
         # if we end up adding levels, we should make the delay
         # be a function of the level number
         self.level = 1
+	self.levelrows = 20
         self.game_over_rendered = False
         self.game_over = False
 
@@ -264,7 +265,14 @@ class Playfield:
 
         if deleted_rows > 0:
             self.score_keeper.update_score(self.level, deleted_rows)
-
+            self.levelrows -= deleted_rows
+            print self.levelrows
+            if self.levelrows <= 0:
+                self.levelrows = 10
+                self.level += 1
+                print "level"
+		print self.level
+                self.set_level_delay()
     def is_game_over(self):
         return self.game_over
 
@@ -355,6 +363,12 @@ class Playfield:
             self.current_tetromino.move_right()
         elif direction == DOWN:
             self.current_tetromino.move_down()
+
+    def set_level_delay(self):
+        if self.level < 30:
+            self.level_delay = 40 - self.level
+        else:
+            self.level_delay = 10
 
     def get_level_delay(self):
         return self.level_delay
