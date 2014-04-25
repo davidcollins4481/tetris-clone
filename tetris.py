@@ -10,7 +10,7 @@ def main():
     screen = pygame.display.set_mode(SCREEN_SIZE)
     screen.fill(SCREEN_BGCOLOR)
     
-    pygame.display.set_caption('Tetris')
+    pygame.display.set_caption('Sirtet')
 
     playfield = Playfield(screen)
     playfield.draw()
